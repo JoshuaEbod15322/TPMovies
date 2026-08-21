@@ -1,0 +1,248 @@
+html {
+  overflow-x: hidden;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+button,
+select,
+input {
+  max-width: 100%;
+}
+
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.app-hero-image {
+  object-position: center top;
+}
+
+.app-category-toolbar {
+  overflow: hidden;
+}
+
+.app-category-scroll {
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-category-scroll > button {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+}
+
+.app-segment-tabs {
+  max-width: 100%;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.app-segment-tabs > button {
+  flex: 0 0 auto;
+}
+
+.app-media-grid {
+  align-items: start;
+}
+
+.app-genre-grid > button {
+  min-width: 0;
+}
+
+.app-details-content .relative.my-8 {
+  padding-left: 0;
+  padding-right: 0;
+  margin-top: 0;
+}
+
+@media (max-width: 767px) {
+  .app-hero,
+  .app-hero-skeleton {
+    height: auto;
+    min-height: 520px;
+    max-height: none;
+  }
+
+  .app-hero {
+    padding-top: 74px;
+  }
+
+  .app-hero-image {
+    object-position: 60% top;
+  }
+
+  .app-hero-content {
+    min-height: 520px;
+    padding: 0 20px 40px;
+  }
+
+  .app-hero-copy {
+    max-width: 100%;
+    transform: none !important;
+  }
+
+  .app-hero-title {
+    font-size: 36px;
+    line-height: 1.08;
+  }
+
+  .app-hero-overview {
+    font-size: 14px;
+    line-height: 1.55;
+    max-width: 100%;
+  }
+
+  .app-hero-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    width: 100%;
+  }
+
+  .app-hero-actions > button {
+    justify-content: center;
+    min-height: 46px;
+    padding: 12px 14px;
+    white-space: nowrap;
+  }
+
+  .app-hero-carousel-controls {
+    display: none !important;
+  }
+
+  .app-category-toolbar {
+    margin-left: -2px;
+    margin-right: -2px;
+    padding: 12px;
+    border-radius: 20px;
+  }
+
+  .app-category-scroll {
+    gap: 8px;
+    padding-bottom: 4px;
+  }
+
+  .app-category-scroll > button,
+  .app-segment-tabs > button {
+    min-height: 38px;
+  }
+
+  .app-genre-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .app-media-grid {
+    gap: 14px 12px;
+  }
+
+  .app-details-hero {
+    height: 430px;
+    min-height: 430px;
+    max-height: none;
+  }
+
+  .app-details-hero img {
+    object-position: center top;
+  }
+
+  .app-details-content {
+    margin-top: -180px;
+    gap: 34px;
+  }
+
+  .app-details-layout {
+    gap: 22px;
+  }
+
+  .app-details-poster {
+    max-width: 220px;
+    width: 58%;
+    min-width: 156px;
+    margin: 0 auto;
+  }
+
+  .app-details-actions {
+    max-width: 100%;
+  }
+
+  .app-details-title {
+    font-size: 32px;
+    line-height: 1.12;
+    overflow-wrap: anywhere;
+  }
+}
+
+@media (max-width: 420px) {
+  .app-hero,
+  .app-hero-skeleton {
+    min-height: 500px;
+  }
+
+  .app-hero-content {
+    min-height: 500px;
+    padding-left: 16px;
+    padding-right: 16px;
+    padding-bottom: 34px;
+  }
+
+  .app-hero-title {
+    font-size: 31px;
+  }
+
+  .app-hero-actions {
+    grid-template-columns: 1fr;
+  }
+
+  .app-media-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px 10px;
+  }
+
+  .app-media-grid h3 {
+    font-size: 13px;
+  }
+
+  .app-genre-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .app-segment-tabs {
+    width: 100%;
+  }
+
+  .app-details-content {
+    margin-top: -150px;
+  }
+
+  .app-details-title {
+    font-size: 28px;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1023px) {
+  .app-hero {
+    height: 76vh;
+    min-height: 560px;
+  }
+
+  .app-hero-title {
+    font-size: 56px;
+  }
+
+  .app-media-grid {
+    gap: 18px;
+  }
+
+  .app-details-content {
+    margin-top: -220px;
+  }
+}
