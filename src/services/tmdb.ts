@@ -1,4 +1,10 @@
-import type { Genre, MediaDetails, MediaItem, Season } from "../types";
+import type {
+  Genre,
+  MediaDetails,
+  MediaItem,
+  PersonDetails,
+  Season,
+} from "../types";
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const DEFAULT_API_KEY = "4e44d9029b1270a757cddc766a1bcb63";
@@ -19,7 +25,8 @@ export const getImageUrl = (
   size: "w300" | "w500" | "w780" | "w1280" | "original" = "w500",
 ): string => {
   if (!path) {
-    return "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSES4BYSlIgsNqRTbA5aJz5sq4zkCa0obwQYlYINpsqOCywoSQYcYo32rYJ&s=10";
+    return "https://images.unsplash.com/photo-1574267432553-4b4628081c31?w=1280&auto=format&fit=crop&q=80";
+    // return "https://images.unsplash.com/photo-1536440136628-849c177e76a1?w=500&auto=format&fit=crop&q=80";
   }
   if (path.startsWith("http://") || path.startsWith("https://")) {
     return path;
@@ -377,4 +384,13 @@ export const getSeasonDetails = async (
   seasonNumber: number,
 ): Promise<Season> => {
   return await tmdbFetch<Season>(`/tv/${tvId}/season/${seasonNumber}`);
+};
+
+// 13. Get Person / Cast Details (with combined credits)
+export const getPersonDetails = async (
+  personId: number | string,
+): Promise<PersonDetails> => {
+  return await tmdbFetch<PersonDetails>(`/person/${personId}`, {
+    append_to_response: "combined_credits,external_ids",
+  });
 };

@@ -9,7 +9,12 @@ import {
   Users,
   AlertCircle,
 } from "lucide-react";
-import type { MediaDetails, MediaItem, VideoTrailer } from "../types";
+import type {
+  CastMember,
+  MediaDetails,
+  MediaItem,
+  VideoTrailer,
+} from "../types";
 import {
   getBackdropUrl,
   getImageUrl,
@@ -17,8 +22,10 @@ import {
   getTVDetails,
 } from "../services/tmdb";
 import { getAnimeDetails } from "../services/animeApi";
+// import { EpisodeList } from "../components/EpisodeList";
 import { MediaRow } from "../components/MediaRow";
 import { TrailerModal } from "../components/TrailerModal";
+import { CastModal } from "../components/CastModal";
 import { DetailsSkeleton } from "../components/LoadingSkeleton";
 import { formatRating, formatRuntime, formatYear } from "../utils/helpers";
 
@@ -29,6 +36,61 @@ interface DetailsProps {
   onWatch: (item: MediaItem, season?: number, episode?: number) => void;
   onSelectMedia: (item: MediaItem) => void;
 }
+
+const CastCard: React.FC<{ actor: CastMember; onClick?: () => void }> = ({
+  actor,
+  onClick,
+}) => {
+  const [imageError, setImageError] = useState(false);
+  const cleanName = (actor.name || "").trim();
+  const firstLetter =
+    cleanName.length > 0 ? cleanName.charAt(0).toUpperCase() : "?";
+  const showImage = Boolean(actor.profile_path) && !imageError;
+
+  return (
+    <div
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          onClick?.();
+        }
+      }}
+      className="flex-shrink-0 w-28 sm:w-32 flex flex-col items-center text-center gap-2 group cursor-pointer select-none transition-transform duration-200 hover:-translate-y-1 focus:outline-none"
+    >
+      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-[#16161a] border border-white/10 group-hover:border-red-500/50 shadow-md group-hover:shadow-red-900/20 flex items-center justify-center flex-shrink-0 transition-all duration-300">
+        {showImage ? (
+          <img
+            src={getImageUrl(actor.profile_path, "w300")}
+            alt={cleanName}
+            loading="lazy"
+            onError={() => setImageError(true)}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center bg-[#1c1c22] select-none">
+            <span className="text-3xl sm:text-4xl font-black text-white drop-shadow-md">
+              {firstLetter}
+            </span>
+          </div>
+        )}
+
+        {/* Hover overlay */}
+        <div className="absolute inset-0 bg-red-600/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
+      </div>
+      <div className="w-full px-1">
+        <h4 className="text-xs font-bold text-white group-hover:text-red-400 transition-colors truncate">
+          {cleanName || "Unknown"}
+        </h4>
+        <p className="text-[11px] text-neutral-400 group-hover:text-neutral-300 transition-colors truncate">
+          {actor.character}
+        </p>
+      </div>
+    </div>
+  );
+};
 
 export const Details: React.FC<DetailsProps> = ({
   mediaId,
@@ -42,6 +104,11 @@ export const Details: React.FC<DetailsProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [selectedSeason, setSelectedSeason] = useState(1);
   const [isTrailerOpen, setIsTrailerOpen] = useState(false);
+  const [selectedCast, setSelectedCast] = useState<{
+    id: number;
+    name: string;
+    profile_path: string | null;
+  } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -121,17 +188,16 @@ export const Details: React.FC<DetailsProps> = ({
   // Find official trailer
   const trailer: VideoTrailer | null =
     details.videos?.results.find(
-      (v) =>
-        v.site === "YouTube" && (v.type === "Trailer" || v.type === "Teaser"),
+      (v) => v.site === "YouTube" && v.type === "Trailer",
     ) ||
     details.videos?.results[0] ||
     null;
 
   // Director or Creator
-  const director = details.credits?.crew.find(
-    (c) => c.job === "Director",
-  )?.name;
-  const creator = details.created_by?.map((c) => c.name).join(", ");
+  const directorObj = details.credits?.crew.find((c) => c.job === "Director");
+  const director = directorObj?.name;
+  const creatorList = details.created_by || [];
+  // const creator = creatorList.map((c) => c.name).join(", ");
 
   return (
     <div className="min-h-screen pb-20 bg-[#050505] text-[#e5e5e5]">
@@ -247,11 +313,11 @@ export const Details: React.FC<DetailsProps> = ({
               <h1 className="app-details-title text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight">
                 {title}
               </h1>
-              {details.japanese_title && details.japanese_title !== title && (
+              {/* {details.japanese_title && details.japanese_title !== title && (
                 <p className="text-base sm:text-lg text-red-400 font-semibold mt-1">
                   {details.japanese_title}
                 </p>
-              )}
+              )} */}
               {details.tagline && (
                 <p className="text-sm italic text-neutral-400 mt-2 font-serif">
                   &ldquo;{details.tagline}&rdquo;
@@ -288,15 +354,47 @@ export const Details: React.FC<DetailsProps> = ({
                   <span className="text-neutral-500 font-semibold block uppercase">
                     Director
                   </span>
-                  <span className="text-white font-medium">{director}</span>
+                  {directorObj ? (
+                    <button
+                      onClick={() =>
+                        setSelectedCast({
+                          id: directorObj.id,
+                          name: directorObj.name,
+                          profile_path: null,
+                        })
+                      }
+                      className="text-white hover:text-red-400 font-medium transition-colors cursor-pointer text-left"
+                    >
+                      {director}
+                    </button>
+                  ) : (
+                    <span className="text-white font-medium">{director}</span>
+                  )}
                 </div>
               )}
-              {creator && (
+              {creatorList.length > 0 && (
                 <div>
                   <span className="text-neutral-500 font-semibold block uppercase">
                     Created By
                   </span>
-                  <span className="text-white font-medium">{creator}</span>
+                  <div className="flex flex-wrap gap-1">
+                    {creatorList.map((c, idx) => (
+                      <button
+                        key={c.id || idx}
+                        onClick={() =>
+                          setSelectedCast({
+                            id: c.id,
+                            name: c.name,
+                            profile_path: c.profile_path,
+                          })
+                        }
+                        className="text-white hover:text-red-400 font-medium transition-colors cursor-pointer text-left"
+                      >
+                        {c.name}
+                        {idx < creatorList.length - 1 ? "," : ""}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
               {details.original_language && (
@@ -329,38 +427,33 @@ export const Details: React.FC<DetailsProps> = ({
         {/* Cast Slider */}
         {details.credits?.cast && details.credits.cast.length > 0 && (
           <div className="flex flex-col gap-4">
-            <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-red-600" />
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Featured Cast
-              </h2>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Users className="w-5 h-5 text-red-600" />
+                <h2 className="text-xl sm:text-2xl font-bold text-white">
+                  Featured Cast
+                </h2>
+              </div>
+              <span className="text-xs text-neutral-400 font-medium">
+                Click actor for filmography
+              </span>
             </div>
             <div
               className="flex gap-4 overflow-x-auto scrollbar-none pb-3"
               style={{ scrollbarWidth: "none" }}
             >
-              {details.credits.cast.slice(0, 14).map((actor) => (
-                <div
+              {details.credits.cast.slice(0, 16).map((actor) => (
+                <CastCard
                   key={actor.id}
-                  className="flex-shrink-0 w-28 sm:w-32 flex flex-col items-center text-center gap-2"
-                >
-                  <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-[#0d0d0d] border border-white/10 shadow-md">
-                    <img
-                      src={getImageUrl(actor.profile_path, "w300")}
-                      alt={actor.name}
-                      loading="lazy"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                  <div className="w-full">
-                    <h4 className="text-xs font-bold text-white truncate">
-                      {actor.name}
-                    </h4>
-                    <p className="text-[11px] text-neutral-400 truncate">
-                      {actor.character}
-                    </p>
-                  </div>
-                </div>
+                  actor={actor}
+                  onClick={() =>
+                    setSelectedCast({
+                      id: actor.id,
+                      name: actor.name,
+                      profile_path: actor.profile_path,
+                    })
+                  }
+                />
               ))}
             </div>
           </div>
@@ -382,6 +475,16 @@ export const Details: React.FC<DetailsProps> = ({
           />
         )}
       </div>
+
+      {/* Cast & Filmography Modal */}
+      <CastModal
+        isOpen={Boolean(selectedCast)}
+        personId={selectedCast?.id || null}
+        initialName={selectedCast?.name}
+        initialProfilePath={selectedCast?.profile_path}
+        onClose={() => setSelectedCast(null)}
+        onSelectMedia={onSelectMedia}
+      />
 
       {/* Trailer Modal */}
       <TrailerModal

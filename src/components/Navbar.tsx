@@ -66,7 +66,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
         >
           <img src={ptLogo} alt="PTMovies Logo" className="w-7 h-7 shrink-0" />
           <div className="flex flex-col">
-            <span className="text-xl sm:text-3xl font-black tracking-tighter text-red-600 flex items-center">
+            <span className="text-xl sm:text-2xl font-black tracking-tighter text-red-600 flex items-center">
               TP<span className="text-white">Movies</span>
             </span>
           </div>

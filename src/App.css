@@ -81,10 +81,17 @@ input {
 
   .app-hero-content {
     min-height: 520px;
-    padding: 0 20px 40px;
+    padding: 0 8px 30px;
+  }
+
+  .app-hero-content {
+    min-height: 500px;
+    padding-left: 4px;
+    padding-right: 24px;
   }
 
   .app-hero-copy {
+    width: 100%;
     max-width: 100%;
     transform: none !important;
   }
@@ -189,9 +196,8 @@ input {
 
   .app-hero-content {
     min-height: 500px;
-    padding-left: 16px;
-    padding-right: 16px;
-    padding-bottom: 34px;
+    padding-left: 4px;
+    padding-right: 24px;
   }
 
   .app-hero-title {

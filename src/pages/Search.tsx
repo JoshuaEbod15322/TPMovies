@@ -4,7 +4,6 @@ import {
   X,
   Film,
   Tv,
-  Sparkles,
   AlertCircle,
   TrendingUp,
 } from "lucide-react";
@@ -180,7 +179,7 @@ export const Search: React.FC<SearchProps> = ({
                 : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10"
             }`}
           >
-            <Sparkles className="w-4 h-4" />
+            <Tv className="w-4 h-4" />
             <span>Anime</span>
           </button>
         </div>

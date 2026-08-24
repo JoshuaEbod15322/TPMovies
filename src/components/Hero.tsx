@@ -13,6 +13,7 @@ import {
 import type { MediaItem } from "../types";
 import { getBackdropUrl } from "../services/tmdb";
 import { formatRating, formatRuntime, formatYear } from "../utils/helpers";
+// import "./app.css";
 
 interface HeroProps {
   items: MediaItem[];
@@ -182,13 +183,12 @@ export const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* CONTENT */}
-
-      <div className="app-hero-content relative z-10 h-full max-w-7xl mx-auto px-2 sm:px-10 flex flex-col justify-end pb-14 sm:pb-16">
+      <div className="app-hero-content relative z-10 h-full max-w-7xl mx-auto px-2 sm:px-10 flex flex-col justify-end pb-14 sm:pb-20">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           {/* LEFT CONTENT*/}
           <div
             key={current.id}
-            className={`app-hero-copy max-w-2xl flex flex-col gap-3.5 sm:gap-4 transition-all duration-500 ${
+            className={`app-hero-copy flex flex-col gap-3.5 sm:gap-4 transition-all duration-500 ${
               isChanging
                 ? "opacity-0 translate-x-0"
                 : "opacity-100 translate-x-3"
@@ -255,15 +255,13 @@ export const Hero: React.FC<HeroProps> = ({
             </p>
 
             {/* Buttons */}
-
-            <div className="app-hero-actions flex items-center gap-3.5 pt-2">
+            <div className="app-hero-actions flex items-center justify-center lg:justify-start gap-3.5 pt-4 w-full lg:w-auto">
               <button
                 id="hero-watch-now-btn"
                 onClick={() => onWatchNow(current)}
                 className="px-7 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-red-600/40 hover:shadow-red-600/60 transition-all duration-200 cursor-pointer active:scale-95"
               >
                 <Play className="w-4 h-4 fill-white" />
-
                 <span>Watch Now</span>
               </button>
 
@@ -273,7 +271,6 @@ export const Hero: React.FC<HeroProps> = ({
                 className="px-7 py-3 rounded-full bg-white/10 hover:bg-white/20 text-white font-semibold text-sm sm:text-base flex items-center gap-2.5 border border-white/10 hover:border-white/25 backdrop-blur-md transition-all duration-200 cursor-pointer active:scale-95"
               >
                 <Info className="w-4 h-4" />
-
                 <span>More Info</span>
               </button>
             </div>

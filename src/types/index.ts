@@ -130,6 +130,33 @@ export interface ContinueWatchingItem {
   rating?: number;
 }
 
+export interface PersonCredit extends MediaItem {
+  character?: string;
+  job?: string;
+  department?: string;
+  credit_id?: string;
+  episode_count?: number;
+}
+
+export interface PersonDetails {
+  id: number;
+  name: string;
+  biography: string;
+  birthday: string | null;
+  deathday: string | null;
+  place_of_birth: string | null;
+  profile_path: string | null;
+  known_for_department: string;
+  popularity: number;
+  gender?: number;
+  also_known_as?: string[];
+  homepage?: string | null;
+  combined_credits?: {
+    cast: PersonCredit[];
+    crew: PersonCredit[];
+  };
+}
+
 export interface StreamingProvider {
   id: string;
   name: string;

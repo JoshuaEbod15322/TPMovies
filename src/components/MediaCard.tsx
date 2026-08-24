@@ -115,11 +115,11 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         >
           {title}
         </h3>
-        {item.japanese_title && item.japanese_title !== title && (
+        {/* {item.japanese_title && item.japanese_title !== title && (
           <p className="text-[11px] text-neutral-500 line-clamp-1 font-sans">
             {item.japanese_title}
           </p>
-        )}
+        )} */}
       </div>
     </div>
   );
