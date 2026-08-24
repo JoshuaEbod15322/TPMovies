@@ -2,7 +2,7 @@
 
 TPMovies is a movie, TV series, anime, and Western catalog built with React and TypeScript. It uses API movie for media information and provides browsing, search, details, cast filmographies, season and episode navigation, continue watching, trailers, and external video-player sources.
 
-![TPMovies preview](public/TPMovies-preview.png)
+![TPMovies preview](public/ptflix-preview.png)
 
 ## Tech Stack
 
