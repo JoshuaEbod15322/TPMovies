@@ -103,6 +103,10 @@ export const Watch: React.FC<WatchProps> = ({
   };
 
   const title =
+    details?.title ||
+    details?.name ||
+    details?.original_title ||
+    details?.original_name ||
     mediaItem.title ||
     mediaItem.name ||
     mediaItem.original_title ||

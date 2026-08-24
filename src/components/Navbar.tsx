@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Search, Menu, X } from "lucide-react";
 import ptLogo from "../assets/PTlogo.png";
+
 export type NavTab =
   | "home"
   | "movies"
@@ -22,14 +23,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
 
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 20) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
+
     window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   const navLinks: { id: NavTab; label: string }[] = [
@@ -41,10 +42,36 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
     { id: "genres", label: "Genres" },
   ];
 
+  // Map each tab to a URL
+  const getPath = (tab: NavTab) => {
+    switch (tab) {
+      case "home":
+        return "/";
+      case "movies":
+        return "/movies";
+      case "tv":
+        return "/tv";
+      case "anime":
+        return "/anime";
+      case "western":
+        return "/western";
+      case "genres":
+        return "/genres";
+      case "search":
+        return "/search";
+      default:
+        return "/";
+    }
+  };
+
   const handleNavClick = (tab: NavTab) => {
     onNavigate(tab);
     setIsMobileMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
   };
 
   return (
@@ -58,59 +85,80 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
         {/* Brand Logo */}
-        <div
-          onClick={() => handleNavClick("home")}
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            handleNavClick("home");
+          }}
           className="flex min-w-0 items-center gap-2 cursor-pointer group"
-          role="button"
-          tabIndex={0}
         >
           <img src={ptLogo} alt="PTMovies Logo" className="w-7 h-7 shrink-0" />
+
           <div className="flex flex-col">
             <span className="text-xl sm:text-2xl font-black tracking-tighter text-red-600 flex items-center">
               TP<span className="text-white">Movies</span>
             </span>
           </div>
-        </div>
+        </a>
 
+        {/* Desktop Navigation */}
         <nav className="hidden md:flex items-center gap-6 text-xs font-semibold uppercase tracking-widest text-neutral-400">
           {navLinks.map((link) => {
             const isActive = currentTab === link.id;
+            const path = getPath(link.id);
+
             return (
-              <button
+              <a
                 key={link.id}
                 id={`nav-link-${link.id}`}
-                onClick={() => handleNavClick(link.id)}
+                href={path}
+                onClick={(e) => {
+                  // Left click only
+                  if (e.button === 0) {
+                    e.preventDefault();
+                    handleNavClick(link.id);
+                  }
+                }}
                 className={`py-1.5 transition-all cursor-pointer flex items-center gap-1.5 ${
                   isActive
                     ? "text-white border-b-2 border-red-600 font-bold"
                     : "hover:text-white text-neutral-400"
                 }`}
               >
-                {/* {link.icon} */}
                 <span>{link.label}</span>
-              </button>
+              </a>
             );
           })}
         </nav>
 
         {/* Right Search Action & Mobile Hamburger */}
         <div className="flex shrink-0 items-center gap-2 sm:gap-3">
-          <button
+          {/* Search */}
+          <a
             id="nav-quick-search-btn"
-            onClick={() => handleNavClick("search")}
+            href="/search"
+            onClick={(e) => {
+              if (e.button === 0) {
+                e.preventDefault();
+                handleNavClick("search");
+              }
+            }}
             aria-label="Open Search"
             className="flex w-9 h-9 sm:w-64 md:w-70 items-center justify-center sm:justify-between gap-2.5 bg-white/5 hover:bg-white/10 px-2 sm:px-4 py-2 rounded-full border border-white/10 hover:border-white/20 transition-all text-xs cursor-pointer group"
           >
             <div className="flex items-center gap-2.5">
               <Search className="w-3.5 h-3.5 text-neutral-400 group-hover:text-white transition-colors" />
+
               <span className="hidden sm:inline text-neutral-400 group-hover:text-neutral-200">
                 Search titles...
               </span>
             </div>
+
             <kbd className="hidden lg:inline text-[10px] bg-neutral-900 text-neutral-500 px-1.5 py-0.5 rounded border border-white/10">
               /
             </kbd>
-          </button>
+          </a>
 
           {/* Mobile Menu Button */}
           <button
@@ -139,19 +187,26 @@ export const Navbar: React.FC<NavbarProps> = ({ currentTab, onNavigate }) => {
           <div className="flex flex-col gap-1.5">
             {navLinks.map((link) => {
               const isActive = currentTab === link.id;
+              const path = getPath(link.id);
+
               return (
-                <button
+                <a
                   key={link.id}
-                  onClick={() => handleNavClick(link.id)}
+                  href={path}
+                  onClick={(e) => {
+                    if (e.button === 0) {
+                      e.preventDefault();
+                      handleNavClick(link.id);
+                    }
+                  }}
                   className={`w-full px-4 py-3 rounded-xl text-left text-xs uppercase tracking-widest font-semibold flex items-center gap-3 transition-colors cursor-pointer ${
                     isActive
                       ? "bg-red-600 text-white font-bold"
                       : "text-neutral-300 hover:bg-white/5"
                   }`}
                 >
-                  {/* {link.icon} */}
                   <span>{link.label}</span>
-                </button>
+                </a>
               );
             })}
           </div>

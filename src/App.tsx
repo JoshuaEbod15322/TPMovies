@@ -17,14 +17,71 @@ import type { MediaItem } from "./types";
 const getMediaType = (item: MediaItem): "movie" | "tv" | "anime" =>
   item.media_type || (item.title ? "movie" : "tv");
 
+type AppRoute =
+  | { kind: "browse"; tab: NavTab }
+  | { kind: "details"; mediaType: "movie" | "tv" | "anime"; id: number }
+  | {
+      kind: "watch";
+      mediaType: "movie" | "tv" | "anime";
+      id: number;
+      season?: number;
+      episode?: number;
+    };
+
+const browsePaths: Record<NavTab, string> = {
+  home: "/",
+  movies: "/movies",
+  tv: "/tv",
+  anime: "/anime",
+  genres: "/genres",
+  western: "/western",
+  search: "/search",
+};
+
+const readRoute = (): AppRoute => {
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  const browseTab = (Object.keys(browsePaths) as NavTab[]).find(
+    (tab) => browsePaths[tab].slice(1) === parts[0],
+  );
+
+  if (parts.length === 0 || browseTab) {
+    return { kind: "browse", tab: browseTab || "home" };
+  }
+
+  const isWatch = parts[0] === "watch";
+  const mediaType = (isWatch ? parts[1] : parts[0]) as "movie" | "tv" | "anime";
+  const id = Number(isWatch ? parts[2] : parts[1]);
+
+  if (["movie", "tv", "anime"].includes(mediaType) && Number.isInteger(id)) {
+    return isWatch
+      ? { kind: "watch", mediaType, id }
+      : { kind: "details", mediaType, id };
+  }
+
+  return { kind: "browse", tab: "home" };
+};
+
 function App() {
-  const [currentTab, setCurrentTab] = useState<NavTab>("home");
-  const [selectedMedia, setSelectedMedia] = useState<MediaItem | null>(null);
-  const [watchTarget, setWatchTarget] = useState<{
-    item: MediaItem;
-    season?: number;
-    episode?: number;
-  } | null>(null);
+  const [route, setRoute] = useState<AppRoute>(readRoute);
+
+  const currentTab = route.kind === "browse" ? route.tab : "home";
+
+  useEffect(() => {
+    const handlePopState = () => setRoute(readRoute());
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const navigate = (nextRoute: AppRoute) => {
+    const path =
+      nextRoute.kind === "browse"
+        ? browsePaths[nextRoute.tab]
+        : nextRoute.kind === "details"
+          ? `/${nextRoute.mediaType}/${nextRoute.id}`
+          : `/watch/${nextRoute.mediaType}/${nextRoute.id}`;
+    window.history.pushState(null, "", path);
+    setRoute(nextRoute);
+  };
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -38,69 +95,72 @@ function App() {
         !isTyping
       ) {
         event.preventDefault();
-        setCurrentTab("search");
-        setSelectedMedia(null);
-        setWatchTarget(null);
+        navigate({ kind: "browse", tab: "search" });
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
 
       if (event.key === "Escape") {
-        if (watchTarget) setWatchTarget(null);
-        else if (selectedMedia) setSelectedMedia(null);
+        if (route.kind === "watch" || route.kind === "details") handleBack();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedMedia, watchTarget]);
+  }, [route]);
 
   const handleNavigate = (tab: NavTab) => {
-    setCurrentTab(tab);
-    setSelectedMedia(null);
-    setWatchTarget(null);
+    navigate({ kind: "browse", tab });
   };
 
   const handleSelectMedia = (item: MediaItem) => {
-    setSelectedMedia(item);
-    setWatchTarget(null);
+    navigate({ kind: "details", mediaType: getMediaType(item), id: item.id });
   };
 
   const handleWatchMedia = (item: MediaItem, season = 1, episode = 1) => {
-    setWatchTarget({ item, season, episode });
-    setSelectedMedia(null);
+    navigate({
+      kind: "watch",
+      mediaType: getMediaType(item),
+      id: item.id,
+      season,
+      episode,
+    });
   };
 
   const handleBack = () => {
-    if (watchTarget) {
-      setWatchTarget(null);
-      return;
-    }
-    setSelectedMedia(null);
+    window.history.back();
   };
 
   let content;
-  if (watchTarget) {
+  if (route.kind === "watch") {
+    const watchItem: MediaItem = {
+      id: route.id,
+      media_type: route.mediaType,
+      overview: "",
+      poster_path: null,
+      backdrop_path: null,
+      vote_average: 0,
+    };
     content = (
       <Watch
-        mediaItem={watchTarget.item}
-        initialSeason={watchTarget.season}
-        initialEpisode={watchTarget.episode}
+        mediaItem={watchItem}
+        initialSeason={route.season}
+        initialEpisode={route.episode}
         onBack={handleBack}
         onSelectMedia={handleSelectMedia}
       />
     );
-  } else if (selectedMedia) {
+  } else if (route.kind === "details") {
     content = (
       <Details
-        mediaId={selectedMedia.id}
-        mediaType={getMediaType(selectedMedia)}
+        mediaId={route.id}
+        mediaType={route.mediaType}
         onBack={handleBack}
         onWatch={handleWatchMedia}
         onSelectMedia={handleSelectMedia}
       />
     );
   } else {
-    switch (currentTab) {
+    switch (route.tab) {
       case "movies":
         content = <Movies onSelectMedia={handleSelectMedia} />;
         break;
