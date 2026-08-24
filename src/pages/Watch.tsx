@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { ArrowLeft, ChevronRight } from "lucide-react";
-import type { MediaDetails, MediaItem } from "../types";
+import { ArrowLeft, ChevronRight, Users } from "lucide-react";
+import type { CastMember, MediaDetails, MediaItem } from "../types";
 import { VideoPlayer } from "../components/VideoPlayer";
 import { StreamingSelector } from "../components/StreamingSelector";
 import { EpisodeList } from "../components/EpisodeList";
 import { MediaRow } from "../components/MediaRow";
+import { CastModal } from "../components/CastModal";
 import { getMovieDetails, getTVDetails } from "../services/tmdb";
+import { getImageUrl } from "../services/tmdb";
 import { getAnimeDetails } from "../services/animeApi";
 import { saveProgress } from "../services/continueWatching";
 import { DEFAULT_PROVIDER_ID } from "../services/streamingSources";
@@ -17,6 +19,47 @@ interface WatchProps {
   onBack: () => void;
   onSelectMedia: (item: MediaItem) => void;
 }
+
+const WatchCastCard: React.FC<{ actor: CastMember; onClick: () => void }> = ({
+  actor,
+  onClick,
+}) => {
+  const cleanName = actor.name.trim();
+  const firstLetter = cleanName.charAt(0).toUpperCase() || "?";
+  const [imageError, setImageError] = useState(false);
+
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      className="flex-shrink-0 w-28 sm:w-32 flex flex-col items-center text-center gap-2 group cursor-pointer select-none focus:outline-none"
+    >
+      <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-[#16161a] border border-white/10 group-hover:border-red-500/50 shadow-md flex items-center justify-center transition-all duration-300">
+        {actor.profile_path && !imageError ? (
+          <img
+            src={getImageUrl(actor.profile_path, "w300")}
+            alt={cleanName}
+            loading="lazy"
+            onError={() => setImageError(true)}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+          />
+        ) : (
+          <span className="text-3xl sm:text-4xl font-black text-white">
+            {firstLetter}
+          </span>
+        )}
+      </div>
+      <div className="w-full px-1">
+        <h4 className="text-xs font-bold text-white group-hover:text-red-400 transition-colors truncate">
+          {cleanName || "Unknown"}
+        </h4>
+        <p className="text-[11px] text-neutral-400 truncate">
+          {actor.character}
+        </p>
+      </div>
+    </button>
+  );
+};
 
 export const Watch: React.FC<WatchProps> = ({
   mediaItem,
@@ -31,6 +74,7 @@ export const Watch: React.FC<WatchProps> = ({
     useState<string>(DEFAULT_PROVIDER_ID);
   const [details, setDetails] = useState<MediaDetails | null>(null);
   const [, setLoading] = useState(true);
+  const [selectedCast, setSelectedCast] = useState<CastMember | null>(null);
 
   const mediaType = mediaItem.media_type || (mediaItem.title ? "movie" : "tv");
   const isTvOrAnime = mediaType === "tv" || mediaType === "anime";
@@ -69,22 +113,26 @@ export const Watch: React.FC<WatchProps> = ({
 
   // Record playback progress in localStorage on mount / episode change
   useEffect(() => {
+    if (!details && !mediaItem.title && !mediaItem.name) return;
+
+    const source = details || mediaItem;
     const title =
-      mediaItem.title ||
-      mediaItem.name ||
-      mediaItem.original_title ||
+      source.title ||
+      source.name ||
+      source.original_title ||
+      source.original_name ||
       "Untitled";
     saveProgress({
       id: mediaItem.id,
       mediaType: mediaType,
       title: title,
-      posterPath: mediaItem.poster_path,
-      backdropPath: mediaItem.backdrop_path,
+      posterPath: source.poster_path,
+      backdropPath: source.backdrop_path,
       season: isTvOrAnime ? season : undefined,
       episode: isTvOrAnime ? episode : undefined,
-      rating: mediaItem.vote_average,
+      rating: source.vote_average,
     });
-  }, [mediaItem, season, episode, mediaType, isTvOrAnime]);
+  }, [details, mediaItem, season, episode, mediaType, isTvOrAnime]);
 
   const handleNextEpisode = () => {
     setEpisode((prev) => prev + 1);
@@ -185,6 +233,29 @@ export const Watch: React.FC<WatchProps> = ({
             {details?.overview || mediaItem.overview}
           </p>
         )}
+
+        {details?.credits?.cast && details.credits.cast.length > 0 && (
+          <div className="flex flex-col gap-4 mt-10">
+            <div className="flex items-center gap-2">
+              <Users className="w-5 h-5 text-red-600" />
+              <h2 className="text-xl sm:text-2xl font-bold text-white">
+                Featured Cast
+              </h2>
+            </div>
+            <div
+              className="flex gap-4 overflow-x-auto scrollbar-none pb-3"
+              style={{ scrollbarWidth: "none" }}
+            >
+              {details.credits.cast.slice(0, 16).map((actor) => (
+                <WatchCastCard
+                  key={actor.id}
+                  actor={actor}
+                  onClick={() => setSelectedCast(actor)}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       {/* TV Series / Anime Season & Episode Guide */}
@@ -210,7 +281,7 @@ export const Watch: React.FC<WatchProps> = ({
       {((details?.recommendations?.results &&
         details.recommendations.results.length > 0) ||
         (details?.similar?.results && details.similar.results.length > 0)) && (
-        <div className="mt-8">
+        <div className="mt-8 ">
           <MediaRow
             title="You Might Also Like"
             items={(
@@ -222,6 +293,15 @@ export const Watch: React.FC<WatchProps> = ({
           />
         </div>
       )}
+
+      <CastModal
+        isOpen={Boolean(selectedCast)}
+        personId={selectedCast?.id || null}
+        initialName={selectedCast?.name}
+        initialProfilePath={selectedCast?.profile_path}
+        onClose={() => setSelectedCast(null)}
+        onSelectMedia={onSelectMedia}
+      />
     </div>
   );
 };
