@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  LayoutGrid,
   Sparkles,
   Flame,
   Laugh,
@@ -152,7 +151,6 @@ export const Genres: React.FC<GenresProps> = ({ onSelectMedia }) => {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
         <div>
           <div className="flex items-center gap-2 text-red-600 mb-1">
-            <LayoutGrid className="w-4 h-4" />
             <span className="text-xs font-bold uppercase tracking-wider">
               Genre Discovery
             </span>

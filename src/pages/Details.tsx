@@ -58,7 +58,7 @@ const CastCard: React.FC<{ actor: CastMember; onClick?: () => void }> = ({
           onClick?.();
         }
       }}
-      className="flex-shrink-0 w-28 sm:w-32 flex flex-col items-center text-center gap-2 group cursor-pointer select-none transition-transform duration-200 hover:-translate-y-1 focus:outline-none"
+      className="flex-shrink-0 w-28 sm:w-32 flex flex-col items-center text-center gap-2 group cursor-pointer select-none transition-transform duration-200 focus:outline-none"
     >
       <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden bg-[#16161a] border border-white/10 group-hover:border-red-500/50 shadow-md group-hover:shadow-red-900/20 flex items-center justify-center flex-shrink-0 transition-all duration-300">
         {showImage ? (
@@ -434,9 +434,6 @@ export const Details: React.FC<DetailsProps> = ({
                   Featured Cast
                 </h2>
               </div>
-              <span className="text-xs text-neutral-400 font-medium">
-                Click actor for filmography
-              </span>
             </div>
             <div
               className="flex gap-4 overflow-x-auto scrollbar-none pb-3"

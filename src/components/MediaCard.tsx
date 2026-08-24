@@ -100,8 +100,10 @@ export const MediaCard: React.FC<MediaCardProps> = ({
 
         {/* Bottom subtle progress/year on poster */}
         <div className="absolute bottom-2 left-2 right-2 flex items-center justify-between pointer-events-none text-xs text-neutral-300 opacity-90 drop-shadow">
-          <span className="font-medium text-[11px]">{year}</span>
-          <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-black/80 border border-white/10">
+          <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-black/100 border border-white/10">
+            {year}
+          </span>
+          <span className="text-[10px] uppercase font-bold px-1.5 py-0.5 rounded bg-black/100 border border-white/10">
             HD
           </span>
         </div>

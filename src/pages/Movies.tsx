@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Film, AlertCircle, RefreshCw } from "lucide-react";
+import { AlertCircle, RefreshCw, Search } from "lucide-react";
 import type { MediaItem } from "../types";
 import { MediaCard } from "../components/MediaCard";
 import { MediaCardSkeleton, HeroSkeleton } from "../components/LoadingSkeleton";
@@ -164,17 +164,11 @@ export const Movies: React.FC<MoviesProps> = ({
         {/* Empty State */}
         {!loading && !error && movies.length === 0 && (
           <div className="p-12 text-center my-8 rounded-2xl bg-[#0d0d0d] border border-white/10 flex flex-col items-center gap-3">
-            <Film className="w-12 h-12 text-neutral-600" />
+            <Search className="w-12 h-12 text-neutral-600" />
             <h3 className="text-lg font-bold text-white">No Movies Found</h3>
             <p className="text-neutral-400 text-sm max-w-sm">
               Try selecting another genre to discover movies.
             </p>
-            <button
-              onClick={() => setSelectedGenre("")}
-              className="mt-2 px-4 py-2 rounded-xl bg-neutral-900 hover:bg-neutral-800 text-neutral-200 text-xs font-semibold cursor-pointer border border-white/10"
-            >
-              Reset to All Genres
-            </button>
           </div>
         )}
 

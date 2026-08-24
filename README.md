@@ -1,32 +1,82 @@
-# React + TypeScript + Vite
+# PTFlix
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+PTFlix is a movie, TV series, anime, and Western catalog built with React and TypeScript. It uses API movie for media information and provides browsing, search, details, cast filmographies, season and episode navigation, continue watching, trailers, and external video-player sources.
 
-Currently, two official plugins are available:
+![PTFlix preview](public/ptflix-preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Tech Stack
 
-## React Compiler
+- React 19 with React DOM
+- TypeScript 6
+- Vite 8 for development and production builds
+- Tailwind CSS 4 for styling
+- Motion for page and modal animations
+- Lucide React for icons
+- Local storage for continue-watching progress
+- Oxlint for linting
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Features
 
-## Expanding the Oxlint configuration
+- Browse movies, TV series, anime, Westerns, and genres
+- View details, ratings, descriptions, trailers, recommendations, and cast
+- Open cast profiles and filter filmographies
+- Watch movies and navigate TV or anime seasons and episodes
+- Switch between configured external streaming sources
+- Save and resume continue-watching progress in the browser
+- Responsive desktop and mobile layout
+- Poster placeholders when images are unavailable or fail to load
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## Getting Started
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
+### Requirements
+
+- Node.js 20 or newer
+- npm
+
+### Install and run
+
+```bash
+npm install
+npm run dev
 ```
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+Vite will print the local development URL, usually `http://localhost:5173`.
+
+The app includes a fallback demo key, but using your own key is recommended. Do not commit private keys or secret credentials.
+
+## Available Scripts
+
+| Command           | Description                              |
+| ----------------- | ---------------------------------------- |
+| `npm run dev`     | Start the Vite development server        |
+| `npm run build`   | Type-check and create a production build |
+| `npm run lint`    | Run Oxlint                               |
+| `npm run preview` | Preview the production build locally     |
+
+## Project Structure
+
+```text
+src/
+  components/   Reusable UI such as cards, navigation, players, and modals
+  hooks/        Shared React hooks
+  pages/        Home, catalog, details, search, and watch views
+  services/    Movie, anime, streaming, and progress services
+  types/       Shared TypeScript models
+  utils/       Formatting and helper functions
+public/        Static assets such as screenshots and icons
+```
+
+## Streaming Sources
+
+Streaming URL builders are configured in [`src/services/streamingSources.ts`](src/services/streamingSources.ts). Each source defines movie and TV URL functions. TV and anime playback receives the ID, season number, and episode number.
+
+Only use streaming sources you are authorized to access and distribute. External providers may change their URLs or block iframe embedding.
+
+## Production Build
+
+```bash
+npm run build
+npm run preview
+```
+
+The generated production files are placed in `dist/`.
