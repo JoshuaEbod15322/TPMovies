@@ -20,7 +20,7 @@ export const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
   if (!items || items.length === 0) return null;
 
   return (
-    <section className="relative my-8 px-4 sm:px-8 max-w-7xl mx-auto w-full">
+    <section className="relative my-8 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-0 sm:pl-0">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <History className="w-5 h-5 text-red-600" />
