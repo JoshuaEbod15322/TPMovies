@@ -183,7 +183,7 @@ export const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* CONTENT */}
-      <div className="app-hero-content relative z-10 h-full max-w-7xl mx-auto px-2 sm:px-10 flex flex-col justify-end pb-14 sm:pb-20 pl-0 sm:pl-0">
+      <div className="app-hero-content relative z-10 h-full max-w-7xl mx-auto px-2 sm:px-10 flex flex-col justify-end pb-14 sm:pb-20 pl-4 sm:pl-0">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           {/* LEFT CONTENT*/}
           <div

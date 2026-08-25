@@ -20,16 +20,13 @@ export const ContinueWatchingRow: React.FC<ContinueWatchingRowProps> = ({
   if (!items || items.length === 0) return null;
 
   return (
-    <section className="relative my-8 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-0 sm:pl-0">
+    <section className="relative my-8 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-0">
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <History className="w-5 h-5 text-red-600" />
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white">
             Continue Watching
           </h2>
-          <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-neutral-300 font-semibold">
-            {items.length}
-          </span>
         </div>
 
         <button

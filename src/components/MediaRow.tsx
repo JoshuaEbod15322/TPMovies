@@ -31,7 +31,7 @@ export const MediaRow: React.FC<MediaRowProps> = ({
   const displayItems = items.slice(0, limit);
 
   return (
-    <section className="relative px-4 sm:px-8 max-w-7xl mx-auto w-full pl-0 sm:pl-0">
+    <section className="relative px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-0">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="flex items-center gap-2.5">

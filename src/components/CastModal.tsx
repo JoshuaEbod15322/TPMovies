@@ -7,7 +7,6 @@ import {
   Calendar,
   MapPin,
   Search,
-  Clapperboard,
   ChevronDown,
   ChevronUp,
 } from "lucide-react";
@@ -235,9 +234,6 @@ export const CastModal: React.FC<CastModalProps> = ({
             {/* Modal Header */}
             <div className="flex items-center justify-between px-5 py-4 sm:px-8 sm:py-5 border-b border-white/10 bg-[#08080a]/95 flex-shrink-0">
               <div className="flex items-center gap-2">
-                <span className="p-1.5 rounded-lg bg-red-600/20 text-red-500">
-                  <Clapperboard className="w-5 h-5" />
-                </span>
                 <div>
                   <h2 className="text-lg sm:text-xl font-black text-white tracking-tight flex items-center gap-2">
                     <span>{displayName}</span>

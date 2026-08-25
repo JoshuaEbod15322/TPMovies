@@ -8,6 +8,9 @@ import type {
 
 const TMDB_BASE_URL = "https://api.themoviedb.org/3";
 const DEFAULT_API_KEY = "4e44d9029b1270a757cddc766a1bcb63";
+const CACHE_TTL_MS = 5 * 60 * 1000;
+const responseCache = new Map<string, { expiresAt: number; data: unknown }>();
+const pendingRequests = new Map<string, Promise<unknown>>();
 
 // Get API Key from environment or use default public demo key
 export const getTmdbApiKey = (): string => {
@@ -122,16 +125,39 @@ async function tmdbFetch<T>(
     }
   });
 
-  try {
-    const res = await fetch(url.toString());
-    if (!res.ok) {
-      throw new Error(`TMDB error: ${res.status} ${res.statusText}`);
-    }
-    return (await res.json()) as T;
-  } catch (err) {
-    console.warn(`Fetch error for ${endpoint}:`, err);
-    throw err;
+  const cacheKey = url.toString();
+  const cached = responseCache.get(cacheKey);
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.data as T;
   }
+
+  const pending = pendingRequests.get(cacheKey);
+  if (pending) return pending as Promise<T>;
+
+  const request = fetch(cacheKey)
+    .then((res) => {
+      if (!res.ok) {
+        throw new Error(`TMDB error: ${res.status} ${res.statusText}`);
+      }
+      return res.json() as Promise<T>;
+    })
+    .then((data) => {
+      responseCache.set(cacheKey, {
+        expiresAt: Date.now() + CACHE_TTL_MS,
+        data,
+      });
+      return data;
+    })
+    .catch((err) => {
+      console.warn(`Fetch error for ${endpoint}:`, err);
+      throw err;
+    })
+    .finally(() => {
+      pendingRequests.delete(cacheKey);
+    });
+
+  pendingRequests.set(cacheKey, request);
+  return request;
 }
 
 // 1. Trending

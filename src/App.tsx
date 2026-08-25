@@ -1,18 +1,37 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { Navbar } from "./components/Navbar";
 import type { NavTab } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { BackToTop } from "./components/BackToTop";
-import { Home } from "./pages/Home";
-import { Movies } from "./pages/Movies";
-import { TVSeries } from "./pages/TVSeries";
-import { Anime } from "./pages/Anime";
-import { Genres } from "./pages/Genres";
-import { Western } from "./pages/Western";
-import { Search } from "./pages/Search";
-import { Details } from "./pages/Details";
-import { Watch } from "./pages/Watch";
 import type { MediaItem } from "./types";
+
+const Home = lazy(() =>
+  import("./pages/Home").then(({ Home }) => ({ default: Home })),
+);
+const Movies = lazy(() =>
+  import("./pages/Movies").then(({ Movies }) => ({ default: Movies })),
+);
+const TVSeries = lazy(() =>
+  import("./pages/TVSeries").then(({ TVSeries }) => ({ default: TVSeries })),
+);
+const Anime = lazy(() =>
+  import("./pages/Anime").then(({ Anime }) => ({ default: Anime })),
+);
+const Genres = lazy(() =>
+  import("./pages/Genres").then(({ Genres }) => ({ default: Genres })),
+);
+const Western = lazy(() =>
+  import("./pages/Western").then(({ Western }) => ({ default: Western })),
+);
+const Search = lazy(() =>
+  import("./pages/Search").then(({ Search }) => ({ default: Search })),
+);
+const Details = lazy(() =>
+  import("./pages/Details").then(({ Details }) => ({ default: Details })),
+);
+const Watch = lazy(() =>
+  import("./pages/Watch").then(({ Watch }) => ({ default: Watch })),
+);
 
 const getMediaType = (item: MediaItem): "movie" | "tv" | "anime" =>
   item.media_type || (item.title ? "movie" : "tv");
@@ -195,7 +214,13 @@ function App() {
   return (
     <div className="min-h-screen bg-[#050505] text-white flex flex-col">
       <Navbar currentTab={currentTab} onNavigate={handleNavigate} />
-      <main className="flex-1">{content}</main>
+      <main className="flex-1">
+        <Suspense
+          fallback={<div className="min-h-[50vh]" aria-label="Loading page" />}
+        >
+          {content}
+        </Suspense>
+      </main>
       <Footer onNavigate={handleNavigate} />
       <BackToTop />
     </div>

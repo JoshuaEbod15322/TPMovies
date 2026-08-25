@@ -119,7 +119,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
         ) : (
           <div className="flex items-center gap-2 text-xs text-neutral-300 font-medium">
             <span className="w-2 h-2 rounded-full bg-red-600"></span>
-            <span>HD Cinema Playback</span>
+            <span>Live</span>
           </div>
         )}
 

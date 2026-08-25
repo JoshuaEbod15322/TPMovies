@@ -227,7 +227,7 @@ export const Home: React.FC<HomeProps> = ({
       />
 
       {/* Top 10 Spotlight Quick Selection Bar */}
-      <section className="my-6 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-0 sm:pl-0">
+      <section className="my-6 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-0">
         <div>
           <div className="flex flex-wrap items-center gap-2.5 pt-1">
             {TOP_10_CATEGORIES.map((cat) => (
@@ -274,7 +274,7 @@ export const Home: React.FC<HomeProps> = ({
             onViewAll={() => onNavigateTab("movies")}
           />
 
-          {/* 📺 Popular TV Series */}
+          {/* Popular TV Series */}
           <MediaRow
             title="Popular TV Series"
             items={popularTV}
