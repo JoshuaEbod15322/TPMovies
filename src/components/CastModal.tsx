@@ -225,7 +225,7 @@ export const CastModal: React.FC<CastModalProps> = ({
             transition={{
               type: "spring",
               damping: 28,
-              stiffness: 240,
+              stiffness: 300,
               mass: 0.8,
             }}
             className="relative w-full max-w-5xl max-h-[92vh] bg-[#0c0c0e] border border-white/10 rounded-2xl sm:rounded-3xl shadow-2xl overflow-hidden flex flex-col z-10"
@@ -283,13 +283,6 @@ export const CastModal: React.FC<CastModalProps> = ({
                     <h3 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
                       {displayName}
                     </h3>
-                    {details?.also_known_as &&
-                      details.also_known_as.length > 0 && (
-                        <p className="text-xs text-neutral-400 mt-0.5 truncate max-w-xl">
-                          Also known as:{" "}
-                          {details.also_known_as.slice(0, 3).join(", ")}
-                        </p>
-                      )}
                   </div>
 
                   {/* Metadata Chips */}
@@ -405,7 +398,7 @@ export const CastModal: React.FC<CastModalProps> = ({
                     onClick={() => setActiveTab("all")}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                       activeTab === "all"
-                        ? "bg-red-600 text-white shadow-lg shadow-red-600/30"
+                        ? "bg-red-600 text-white "
                         : "bg-[#15151a] text-neutral-400 hover:text-white border border-white/5"
                     }`}
                   >
@@ -416,7 +409,7 @@ export const CastModal: React.FC<CastModalProps> = ({
                     onClick={() => setActiveTab("movie")}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                       activeTab === "movie"
-                        ? "bg-red-600 text-white shadow-lg shadow-red-600/30"
+                        ? "bg-red-600 text-white "
                         : "bg-[#15151a] text-neutral-400 hover:text-white border border-white/5"
                     }`}
                   >
@@ -428,7 +421,7 @@ export const CastModal: React.FC<CastModalProps> = ({
                     onClick={() => setActiveTab("tv")}
                     className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer whitespace-nowrap ${
                       activeTab === "tv"
-                        ? "bg-red-600 text-white shadow-lg shadow-red-600/30"
+                        ? "bg-red-600 text-white "
                         : "bg-[#15151a] text-neutral-400 hover:text-white border border-white/5"
                     }`}
                   >

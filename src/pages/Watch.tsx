@@ -218,7 +218,7 @@ export const Watch: React.FC<WatchProps> = ({
       {/* Media Title & Description Card */}
       <div id="media-info-card">
         <div className="flex flex-col gap-1">
-          <h1 className="text-xl sm:text-2xl md:text-3xl font-black text-white tracking-tight leading-tight">
+          <h1 className="text-3xl md:text-4xl font-black text-red-600 tracking-tight leading-tight pt-2">
             {title}
           </h1>
           {mediaItem.japanese_title && mediaItem.japanese_title !== title && (
@@ -235,12 +235,10 @@ export const Watch: React.FC<WatchProps> = ({
         )}
 
         {details?.credits?.cast && details.credits.cast.length > 0 && (
-          <div className="flex flex-col gap-4 mt-10">
+          <div className="flex flex-col gap-4 mt-15">
             <div className="flex items-center gap-2">
-              <Users className="w-5 h-5 text-red-600" />
-              <h2 className="text-xl sm:text-2xl font-bold text-white">
-                Featured Cast
-              </h2>
+              <Users className="text-red-600" />
+              <h2 className="text-xl sm:text-2xl font-bold ">Featured Cast</h2>
             </div>
             <div
               className="flex gap-4 overflow-x-auto scrollbar-none pb-3"
@@ -281,7 +279,7 @@ export const Watch: React.FC<WatchProps> = ({
       {((details?.recommendations?.results &&
         details.recommendations.results.length > 0) ||
         (details?.similar?.results && details.similar.results.length > 0)) && (
-        <div className="mt-8 ">
+        <div className="recom mt-8 mx-[-15px]">
           <MediaRow
             title="You Might Also Like"
             items={(

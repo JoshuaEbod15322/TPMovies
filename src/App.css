@@ -194,6 +194,10 @@ input {
     min-height: 500px;
   }
 
+  .recom {
+    padding: 20px;
+  }
+
   .app-hero-content {
     min-height: 500px;
     padding-left: 4px;

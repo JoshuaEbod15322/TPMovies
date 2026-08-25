@@ -45,6 +45,7 @@ type AppRoute =
       id: number;
       season?: number;
       episode?: number;
+      returnRoute: Exclude<AppRoute, { kind: "watch" }>;
     };
 
 const browsePaths: Record<NavTab, string> = {
@@ -73,7 +74,12 @@ const readRoute = (): AppRoute => {
 
   if (["movie", "tv", "anime"].includes(mediaType) && Number.isInteger(id)) {
     return isWatch
-      ? { kind: "watch", mediaType, id }
+      ? {
+          kind: "watch",
+          mediaType,
+          id,
+          returnRoute: { kind: "browse", tab: "home" },
+        }
       : { kind: "details", mediaType, id };
   }
 
@@ -91,14 +97,14 @@ function App() {
     return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
-  const navigate = (nextRoute: AppRoute) => {
+  const navigate = (nextRoute: AppRoute, replace = false) => {
     const path =
       nextRoute.kind === "browse"
         ? browsePaths[nextRoute.tab]
         : nextRoute.kind === "details"
           ? `/${nextRoute.mediaType}/${nextRoute.id}`
           : `/watch/${nextRoute.mediaType}/${nextRoute.id}`;
-    window.history.pushState(null, "", path);
+    window.history[replace ? "replaceState" : "pushState"](null, "", path);
     setRoute(nextRoute);
   };
 
@@ -135,17 +141,31 @@ function App() {
     navigate({ kind: "details", mediaType: getMediaType(item), id: item.id });
   };
 
-  const handleWatchMedia = (item: MediaItem, season = 1, episode = 1) => {
+  const handleWatchMedia = (
+    item: MediaItem,
+    season = 1,
+    episode = 1,
+    returnRoute: Exclude<AppRoute, { kind: "watch" }> = {
+      kind: "browse",
+      tab: "home",
+    },
+  ) => {
     navigate({
       kind: "watch",
       mediaType: getMediaType(item),
       id: item.id,
       season,
       episode,
+      returnRoute,
     });
   };
 
   const handleBack = () => {
+    if (route.kind === "watch") {
+      navigate(route.returnRoute, true);
+      return;
+    }
+
     window.history.back();
   };
 
@@ -174,26 +194,56 @@ function App() {
         mediaId={route.id}
         mediaType={route.mediaType}
         onBack={handleBack}
-        onWatch={handleWatchMedia}
+        onWatch={(item, season, episode) =>
+          handleWatchMedia(item, season, episode, route)
+        }
         onSelectMedia={handleSelectMedia}
       />
     );
   } else {
     switch (route.tab) {
       case "movies":
-        content = <Movies onSelectMedia={handleSelectMedia} />;
+        content = (
+          <Movies
+            onSelectMedia={handleSelectMedia}
+            onWatchMedia={(item) =>
+              handleWatchMedia(item, 1, 1, { kind: "browse", tab: "movies" })
+            }
+          />
+        );
         break;
       case "tv":
-        content = <TVSeries onSelectMedia={handleSelectMedia} />;
+        content = (
+          <TVSeries
+            onSelectMedia={handleSelectMedia}
+            onWatchMedia={(item) =>
+              handleWatchMedia(item, 1, 1, { kind: "browse", tab: "tv" })
+            }
+          />
+        );
         break;
       case "anime":
-        content = <Anime onSelectMedia={handleSelectMedia} />;
+        content = (
+          <Anime
+            onSelectMedia={handleSelectMedia}
+            onWatchMedia={(item) =>
+              handleWatchMedia(item, 1, 1, { kind: "browse", tab: "anime" })
+            }
+          />
+        );
         break;
       case "genres":
         content = <Genres onSelectMedia={handleSelectMedia} />;
         break;
       case "western":
-        content = <Western onSelectMedia={handleSelectMedia} />;
+        content = (
+          <Western
+            onSelectMedia={handleSelectMedia}
+            onWatchMedia={(item) =>
+              handleWatchMedia(item, 1, 1, { kind: "browse", tab: "western" })
+            }
+          />
+        );
         break;
       case "search":
         content = <Search onSelectMedia={handleSelectMedia} />;
@@ -203,7 +253,12 @@ function App() {
         content = (
           <Home
             onSelectMedia={handleSelectMedia}
-            onWatchMedia={handleWatchMedia}
+            onWatchMedia={(item, season, episode) =>
+              handleWatchMedia(item, season, episode, {
+                kind: "browse",
+                tab: "home",
+              })
+            }
             onNavigateTab={handleNavigate}
           />
         );

@@ -183,7 +183,7 @@ export const Hero: React.FC<HeroProps> = ({
       </div>
 
       {/* CONTENT */}
-      <div className="app-hero-content relative z-10 h-full max-w-7xl mx-auto px-2 sm:px-10 flex flex-col justify-end pb-14 sm:pb-20 pl-4 sm:pl-0">
+      <div className="app-hero-content relative z-10 h-full max-w-7xl mx-auto px-2 sm:px-10 flex flex-col justify-end pb-14 sm:pb-20 pl-4 sm:pl-4">
         <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-8">
           {/* LEFT CONTENT*/}
           <div
@@ -259,7 +259,7 @@ export const Hero: React.FC<HeroProps> = ({
               <button
                 id="hero-watch-now-btn"
                 onClick={() => onWatchNow(current)}
-                className="px-7 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 shadow-lg shadow-red-600/40 hover:shadow-red-600/60 transition-all duration-200 cursor-pointer active:scale-95"
+                className="px-7 py-3 rounded-full bg-red-600 hover:bg-red-700 text-white font-bold text-sm sm:text-base flex items-center gap-2.5 transition-all duration-200 cursor-pointer active:scale-95"
               >
                 <Play className="w-4 h-4 fill-white" />
                 <span>Watch Now</span>

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Compass, Film, Tv, Sparkles, Radio } from "lucide-react";
+import { Compass, Tv, Sparkles, Radio, TrendingUp } from "lucide-react";
 import type { MediaItem, ContinueWatchingItem } from "../types";
 import { Hero } from "../components/Hero";
 import { MediaRow } from "../components/MediaRow";
@@ -227,15 +227,15 @@ export const Home: React.FC<HomeProps> = ({
       />
 
       {/* Top 10 Spotlight Quick Selection Bar */}
-      <section className="my-6 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-0">
-        <div>
-          <div className="flex flex-wrap items-center gap-2.5 pt-1">
+      <section className="my-6 px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-4">
+        <div className="px-4 sm:px-0">
+          <div className="flex flex-nowrap sm:flex-wrap items-center gap-2.5 pt-1 overflow-x-auto sm:overflow-visible snap-x snap-mandatory sm:snap-none -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide ">
             {TOP_10_CATEGORIES.map((cat) => (
               <button
                 key={cat.id}
                 id={`home-top10-btn-${cat.id}`}
                 onClick={() => handleOpenTop10(cat.id)}
-                className="px-3.5 py-2 rounded-xl bg-[#141414] hover:bg-red-900 hover:text-white text-neutral-200 border border-white/10 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm hover:shadow-red-600/20 hover:scale-[1.02] active:scale-98"
+                className="shrink-0 snap-start px-3.5 py-2 rounded-xl bg-[#141414] hover:bg-red-900 hover:text-white text-neutral-200 border border-white/10 text-xs sm:text-sm font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm hover:shadow-red-600/20 hover:scale-[1.02] active:scale-98"
               >
                 <span className="text-red-500 group-hover:text-white">
                   {cat.icon}
@@ -255,7 +255,7 @@ export const Home: React.FC<HomeProps> = ({
           <MediaRowSkeleton title="Popular TV Series" />
         </>
       ) : (
-        <div className="flex flex-col gap-2">
+        <div className="flex flex-col gap-2 my-6">
           {/* 🧭 Discovery (Random Movies, Series & Anime) */}
           <MediaRow
             title="Discovery"
@@ -269,7 +269,7 @@ export const Home: React.FC<HomeProps> = ({
           <MediaRow
             title="Popular Movies"
             items={popularMovies}
-            icon={<Film className="w-6 h-6 text-red-600" />}
+            icon={<TrendingUp className="w-6 h-6 text-red-600" />}
             onSelectMedia={onSelectMedia}
             onViewAll={() => onNavigateTab("movies")}
           />

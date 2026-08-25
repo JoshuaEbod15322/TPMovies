@@ -31,7 +31,7 @@ export const MediaRow: React.FC<MediaRowProps> = ({
   const displayItems = items.slice(0, limit);
 
   return (
-    <section className="relative px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-0">
+    <section className="relative px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-4">
       {/* Section Header */}
       <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
         <div className="flex items-center gap-2.5">
@@ -56,7 +56,7 @@ export const MediaRow: React.FC<MediaRowProps> = ({
       </div>
 
       {/* 3 Rows x 5 Columns Grid */}
-      <div className="app-media-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5">
+      <div className="app-media-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 sm:mb-15">
         {displayItems.map((item) => (
           <MediaCard
             key={`${item.media_type || "media"}-${item.id}`}
