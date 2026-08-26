@@ -40,6 +40,7 @@ export interface MediaItem {
   episodes_count?: number;
   airing_status?: string;
   anime_season?: string;
+  anime_type?: "movie" | "series";
 }
 
 export interface CastMember {

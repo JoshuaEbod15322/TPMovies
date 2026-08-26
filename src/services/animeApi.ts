@@ -31,23 +31,64 @@ const getApiKey = () => {
     : DEFAULT_API_KEY;
 };
 
+const mapAnimeResult = (item: any, mediaType: "movie" | "tv"): MediaItem => ({
+  ...item,
+  media_type: mediaType === "movie" ? "movie" : "anime",
+  anime_type: mediaType === "movie" ? "movie" : "series",
+  japanese_title: item.original_title || item.original_name,
+});
+
+const discoverAnime = async (
+  page: number,
+  sortBy: string,
+  extraParams: Record<string, string> = {},
+): Promise<{ results: MediaItem[]; total_pages: number }> => {
+  const apiKey = getApiKey();
+  const baseParams = new URLSearchParams({
+    api_key: apiKey,
+    language: "en-US",
+    sort_by: sortBy,
+    with_genres: "16",
+    with_original_language: "ja",
+    page: String(page),
+    ...extraParams,
+  });
+
+  const [movieResponse, seriesResponse] = await Promise.all([
+    fetch(`${TMDB_BASE_URL}/discover/movie?${baseParams.toString()}`),
+    fetch(`${TMDB_BASE_URL}/discover/tv?${baseParams.toString()}`),
+  ]);
+  const [movieData, seriesData] = await Promise.all([
+    movieResponse.json(),
+    seriesResponse.json(),
+  ]);
+
+  const results = [
+    ...(movieData.results || []).map((item: any) =>
+      mapAnimeResult(item, "movie"),
+    ),
+    ...(seriesData.results || []).map((item: any) =>
+      mapAnimeResult(item, "tv"),
+    ),
+  ].sort((first, second) => (second.popularity || 0) - (first.popularity || 0));
+
+  return {
+    results,
+    total_pages: Math.max(
+      movieData.total_pages || 1,
+      seriesData.total_pages || 1,
+    ),
+  };
+};
+
 // Discover anime with TMDB Animation genre (16) + Japanese origin
 export const getTrendingAnime = async (
   page = 1,
 ): Promise<{ results: MediaItem[]; total_pages: number }> => {
   try {
-    const apiKey = getApiKey();
-    const url = `${TMDB_BASE_URL}/discover/tv?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&with_genres=16&with_original_language=ja&page=${page}&vote_count.gte=20`;
-    const res = await fetch(url);
-    const data = await res.json();
-    return {
-      results: (data.results || []).map((item: any) => ({
-        ...item,
-        media_type: "anime",
-        japanese_title: item.original_name,
-      })),
-      total_pages: data.total_pages || 1,
-    };
+    return await discoverAnime(page, "popularity.desc", {
+      "vote_count.gte": "20",
+    });
   } catch (e) {
     return { results: [], total_pages: 1 };
   }
@@ -57,18 +98,9 @@ export const getPopularAnime = async (
   page = 1,
 ): Promise<{ results: MediaItem[]; total_pages: number }> => {
   try {
-    const apiKey = getApiKey();
-    const url = `${TMDB_BASE_URL}/discover/tv?api_key=${apiKey}&language=en-US&sort_by=popularity.desc&with_genres=16&with_original_language=ja&page=${page}&vote_count.gte=50`;
-    const res = await fetch(url);
-    const data = await res.json();
-    return {
-      results: (data.results || []).map((item: any) => ({
-        ...item,
-        media_type: "anime",
-        japanese_title: item.original_name,
-      })),
-      total_pages: data.total_pages || 1,
-    };
+    return await discoverAnime(page, "popularity.desc", {
+      "vote_count.gte": "50",
+    });
   } catch (e) {
     return { results: [], total_pages: 1 };
   }
@@ -151,31 +183,18 @@ export const discoverAnimeByGenre = async (
   total_results: number;
 }> => {
   try {
-    const apiKey = getApiKey();
-    const params = new URLSearchParams({
-      api_key: apiKey,
-      language: "en-US",
-      sort_by: sortBy,
-      with_genres: `16${genreId ? `,${genreId}` : ""}`,
-      with_original_language: "ja",
-      page: String(page),
+    const extraParams: Record<string, string> = {
       "vote_count.gte": "10",
-    });
-    if (firstAirDateYear) params.set("first_air_date_year", firstAirDateYear);
-    if (minimumRating > 0) {
-      params.set("vote_average.gte", String(minimumRating));
-    }
-    const url = `${TMDB_BASE_URL}/discover/tv?${params.toString()}`;
-    const res = await fetch(url);
-    const data = await res.json();
+      ...(genreId ? { with_genres: `16,${genreId}` } : {}),
+    };
+    if (firstAirDateYear) extraParams.first_air_date_year = firstAirDateYear;
+    if (minimumRating > 0)
+      extraParams["vote_average.gte"] = String(minimumRating);
+    const data = await discoverAnime(page, sortBy, extraParams);
     return {
-      results: (data.results || []).map((item: any) => ({
-        ...item,
-        media_type: "anime",
-        japanese_title: item.original_name,
-      })),
-      total_pages: data.total_pages || 1,
-      total_results: data.total_results || 0,
+      results: data.results,
+      total_pages: data.total_pages,
+      total_results: data.results.length,
     };
   } catch (e) {
     return { results: [], total_pages: 1, total_results: 0 };

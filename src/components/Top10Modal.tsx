@@ -291,7 +291,7 @@ export const Top10Modal: React.FC<Top10ModalProps> = ({
                           </div>
 
                           {/* Stylized Huge Rank Number on the Right (Watermark) */}
-                          <span className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-5xl sm:text-7xl lg:text-8xl font-black italic select-none pointer-events-none text-white/10 group-hover:text-red-600/20 transition-colors duration-500">
+                          <span className="absolute right-2 sm:right-4 top-1/2 -translate-y-1/2 text-5xl sm:text-7xl lg:text-8xl font-black italic select-none pointer-events-none text-white/10 group-hover:text-red-600/20 transition-colors duration-300">
                             {rank}
                           </span>
                         </motion.div>

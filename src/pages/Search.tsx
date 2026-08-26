@@ -37,7 +37,7 @@ export const Search: React.FC<SearchProps> = ({
     "Avengers",
     "Stranger Things",
     "Solo Leveling",
-    "Spider-Man",
+    "One Piece",
   ]);
   const [loading, setLoading] = useState(false);
   const [hasSearched, setHasSearched] = useState(false);

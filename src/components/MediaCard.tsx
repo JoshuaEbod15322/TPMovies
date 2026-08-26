@@ -25,13 +25,16 @@ export const MediaCard: React.FC<MediaCardProps> = ({
   const year = formatYear(releaseDate);
   const rating = formatRating(item.vote_average);
   const isAnime = item.media_type === "anime";
+  const isAnimeMovie = item.anime_type === "movie";
   const [imageFailed, setImageFailed] = useState(!item.poster_path);
   const fallbackLetter = title.trim().charAt(0).toUpperCase() || "?";
-  const mediaType = isAnime
-    ? "Anime"
-    : item.media_type === "tv"
-      ? "TV Series"
-      : "Movie";
+  const mediaType = isAnimeMovie
+    ? "Movie"
+    : isAnime
+      ? "Series"
+      : item.media_type === "tv"
+        ? "Series"
+        : "Movie";
 
   return (
     <div
@@ -79,7 +82,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
         <div className="absolute top-2 left-2 right-2 flex items-center justify-between pointer-events-none">
           {/* Media Type Badge */}
           <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded shadow backdrop-blur-md flex items-center gap-1 bg-black/80 text-neutral-300 border border-white/10">
-            {isAnime ? (
+            {isAnimeMovie || isAnime ? (
               <Tv className="w-3 h-3 text-purple-400" />
             ) : item.media_type === "tv" ? (
               <Tv className="w-3 h-3 text-blue-400" />

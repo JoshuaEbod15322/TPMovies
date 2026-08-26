@@ -44,7 +44,7 @@ export const Anime: React.FC<AnimeProps> = ({
           valid.length > 0
             ? valid.slice(0, 7)
             : (trendData.results || []).slice(0, 5)
-        ).map((item) => ({ ...item, media_type: "anime" as const }));
+        ).map((item) => ({ ...item }));
         setHeroAnime(mapped);
       } catch (err) {
         console.error("Error loading anime hero:", err);
@@ -184,7 +184,7 @@ export const Anime: React.FC<AnimeProps> = ({
               {animeList.map((anime) => (
                 <MediaCard
                   key={`anime-${anime.id}`}
-                  item={{ ...anime, media_type: "anime" }}
+                  item={anime}
                   onSelect={onSelectMedia}
                 />
               ))}

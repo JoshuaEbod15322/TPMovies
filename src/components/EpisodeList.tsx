@@ -12,6 +12,7 @@ import type { Episode, Season } from "../types";
 import { getImageUrl } from "../services/tmdb";
 import { getSeasonDetails } from "../services/tmdb";
 import { formatRuntime } from "../utils/helpers";
+import { Pagination } from "./Pagination";
 
 interface EpisodeListProps {
   mediaId: number;
@@ -38,13 +39,16 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
   const [loading, setLoading] = useState(false);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [isSeasonMenuOpen, setIsSeasonMenuOpen] = useState(false);
+  const [episodePage, setEpisodePage] = useState(1);
   const [, setError] = useState<string | null>(null);
+  const episodesPerPage = 12;
 
   // Sync selected season with prop
   useEffect(() => {
     if (currentSeason) {
       setSelectedSeason(currentSeason);
     }
+    setEpisodePage(1);
   }, [currentSeason]);
 
   // Fetch season episodes
@@ -100,6 +104,10 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
     };
   }, [mediaId, selectedSeason, totalSeasons]);
 
+  useEffect(() => {
+    setEpisodePage(1);
+  }, [selectedSeason]);
+
   // Filter valid seasons (exclude Season 0 specials unless requested)
   const validSeasons = totalSeasons.filter((s) => s.season_number > 0);
   const availableSeasons =
@@ -118,6 +126,11 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
         ];
 
   const episodes = seasonData?.episodes || [];
+  const totalEpisodePages = Math.ceil(episodes.length / episodesPerPage);
+  const visibleEpisodes = episodes.slice(
+    (episodePage - 1) * episodesPerPage,
+    episodePage * episodesPerPage,
+  );
 
   return (
     <div className="flex flex-col gap-5 w-full bg-[#0d0d0d] border border-white/10 rounded-2xl p-4 sm:p-6 backdrop-blur-md">
@@ -221,7 +234,7 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
 
       {!loading && episodes.length > 0 && viewMode === "grid" && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          {episodes.map((ep) => {
+          {visibleEpisodes.map((ep) => {
             const isPlaying =
               selectedSeason === currentSeason &&
               ep.episode_number === currentEpisode;
@@ -259,8 +272,8 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
                   </div>
 
                   {/* Ep number chip */}
-                  <span className="absolute top-2 left-2 px-2 py-0.5 text-[11px] font-bold rounded bg-black/80 text-white backdrop-blur-sm border border-white/10">
-                    Ep {ep.episode_number}
+                  <span className="absolute top-2 left-2 px-2 py-0.5 text-[11px] font-bold rounded bg-black/70 text-red-500 backdrop-blur-sm border border-white/10">
+                    EPISODE {ep.episode_number}
                   </span>
                 </div>
 
@@ -307,7 +320,7 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
       {/* List View */}
       {!loading && episodes.length > 0 && viewMode === "list" && (
         <div className="flex flex-col divide-y divide-white/5">
-          {episodes.map((ep) => {
+          {visibleEpisodes.map((ep) => {
             const isPlaying =
               selectedSeason === currentSeason &&
               ep.episode_number === currentEpisode;
@@ -355,6 +368,15 @@ export const EpisodeList: React.FC<EpisodeListProps> = ({
             );
           })}
         </div>
+      )}
+
+      {!loading && episodes.length > 0 && (
+        <Pagination
+          currentPage={episodePage}
+          totalPages={totalEpisodePages}
+          onPageChange={setEpisodePage}
+          isLoading={loading}
+        />
       )}
     </div>
   );

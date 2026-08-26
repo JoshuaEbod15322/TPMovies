@@ -1,5 +1,10 @@
-import React from 'react';
-import { ChevronLeft, ChevronRight, ChevronsLeft, ChevronsRight } from 'lucide-react';
+import React from "react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronsLeft,
+  ChevronsRight,
+} from "lucide-react";
 
 interface PaginationProps {
   currentPage: number;
@@ -20,9 +25,10 @@ export const Pagination: React.FC<PaginationProps> = ({
   if (maxPages <= 1) return null;
 
   const handlePageClick = (page: number) => {
-    if (page < 1 || page > maxPages || page === currentPage || isLoading) return;
+    if (page < 1 || page > maxPages || page === currentPage || isLoading)
+      return;
     onPageChange(page);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   // Generate page numbers to display
@@ -36,7 +42,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     pages.push(1);
 
     if (left > 2) {
-      pages.push('...');
+      pages.push("...");
     }
 
     for (let i = left; i <= right; i++) {
@@ -44,7 +50,7 @@ export const Pagination: React.FC<PaginationProps> = ({
     }
 
     if (right < maxPages - 1) {
-      pages.push('...');
+      pages.push("...");
     }
 
     if (maxPages > 1) {
@@ -64,8 +70,11 @@ export const Pagination: React.FC<PaginationProps> = ({
     >
       {/* Page Info */}
       <div className="text-xs text-neutral-400 font-medium order-2 sm:order-1">
-        Showing Page <span className="text-white font-bold">{currentPage}</span> of{' '}
-        <span className="text-white font-bold">{maxPages.toLocaleString()}</span>
+        {/* Showing Page <span className="text-white font-bold">{currentPage}</span>{" "}
+        of{" "}
+        <span className="text-white font-bold">
+          {maxPages.toLocaleString()}
+        </span> */}
       </div>
 
       {/* Numeric Buttons */}
@@ -97,13 +106,13 @@ export const Pagination: React.FC<PaginationProps> = ({
         {/* Dynamic Page Items */}
         <div className="flex items-center gap-1">
           {pageNumbers.map((p, idx) => {
-            if (p === '...') {
+            if (p === "...") {
               return (
                 <span
                   key={`ellipsis-${idx}`}
                   className="px-2 py-1 text-xs text-neutral-500 select-none font-bold"
                 >
-                  •••
+                  • • •
                 </span>
               );
             }
@@ -117,11 +126,11 @@ export const Pagination: React.FC<PaginationProps> = ({
                 id={`pagination-page-${pageNum}`}
                 onClick={() => handlePageClick(pageNum)}
                 disabled={isLoading}
-                aria-current={isCurrent ? 'page' : undefined}
+                aria-current={isCurrent ? "page" : undefined}
                 className={`min-w-[36px] h-9 px-2 rounded-xl text-xs font-bold transition-all cursor-pointer flex items-center justify-center ${
                   isCurrent
-                    ? 'bg-red-600 text-white shadow-lg shadow-red-600/30 scale-105 border border-red-500'
-                    : 'bg-[#0d0d0d] hover:bg-neutral-800 text-neutral-300 hover:text-white border border-white/10'
+                    ? "bg-red-600 text-white shadow-lg shadow-red-600/30 scale-105 border border-red-500"
+                    : "bg-[#0d0d0d] hover:bg-neutral-800 text-neutral-300 hover:text-white border border-white/10"
                 }`}
               >
                 {pageNum}
