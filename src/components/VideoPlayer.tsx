@@ -87,7 +87,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
             <button
               onClick={onPrevEpisode}
               disabled={episode <= 1}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-[10px] font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
                 episode <= 1
                   ? "opacity-40 bg-neutral-900 border-white/5 text-neutral-500 cursor-not-allowed"
                   : "bg-white/5 hover:bg-red-600 hover:text-white border-white/10 text-white"
@@ -97,7 +97,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               <span>Previous Ep</span>
             </button>
 
-            <span className="text-xs font-bold text-neutral-200 px-3 py-1.5 bg-black rounded-lg border border-white/10">
+            <span className="text-[10px] font-bold text-neutral-200 px-3 py-1.5 bg-black rounded-lg border border-white/10">
               Season {season} • Ep {episode}
             </span>
 
@@ -106,7 +106,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({
               disabled={Boolean(
                 totalEpisodesInSeason && episode >= totalEpisodesInSeason,
               )}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-[10px] font-semibold flex items-center gap-1.5 border transition-all cursor-pointer ${
                 totalEpisodesInSeason && episode >= totalEpisodesInSeason
                   ? "opacity-40 bg-neutral-900 border-white/5 text-neutral-500 cursor-not-allowed"
                   : "bg-white/5 hover:bg-red-600 hover:text-white border-white/10 text-white"
