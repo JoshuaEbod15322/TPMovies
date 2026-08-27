@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from "react";
 import { ArrowLeft, ChevronRight, Users } from "lucide-react";
-import type { CastMember, MediaDetails, MediaItem } from "../types";
+import type { CastMember, MediaDetails, MediaItem, Season } from "../types";
 import { VideoPlayer } from "../components/VideoPlayer";
 import { StreamingSelector } from "../components/StreamingSelector";
 import { EpisodeList } from "../components/EpisodeList";
 import { MediaRow } from "../components/MediaRow";
 import { CastModal } from "../components/CastModal";
-import { getMovieDetails, getTVDetails } from "../services/tmdb";
+import {
+  getMovieDetails,
+  getSeasonDetails,
+  getTVDetails,
+} from "../services/tmdb";
 import { getImageUrl } from "../services/tmdb";
 import { getAnimeDetails } from "../services/animeApi";
 import { saveProgress } from "../services/continueWatching";
@@ -73,11 +77,17 @@ export const Watch: React.FC<WatchProps> = ({
   const [selectedProvider, setSelectedProvider] =
     useState<string>(DEFAULT_PROVIDER_ID);
   const [details, setDetails] = useState<MediaDetails | null>(null);
+  const [seasonDetails, setSeasonDetails] = useState<Season | null>(null);
   const [, setLoading] = useState(true);
   const [selectedCast, setSelectedCast] = useState<CastMember | null>(null);
 
   const mediaType = mediaItem.media_type || (mediaItem.title ? "movie" : "tv");
   const isTvOrAnime = mediaType === "tv" || mediaType === "anime";
+
+  useEffect(() => {
+    setSeason(initialSeason);
+    setEpisode(initialEpisode);
+  }, [mediaItem.id, initialSeason, initialEpisode]);
 
   // Fetch full details for episodes and recommendations
   useEffect(() => {
@@ -110,6 +120,28 @@ export const Watch: React.FC<WatchProps> = ({
       isMounted = false;
     };
   }, [mediaItem.id, mediaType]);
+
+  useEffect(() => {
+    if (!isTvOrAnime) {
+      setSeasonDetails(null);
+      return;
+    }
+
+    let isMounted = true;
+    setSeasonDetails(null);
+
+    getSeasonDetails(mediaItem.id, season)
+      .then((data) => {
+        if (isMounted) setSeasonDetails(data);
+      })
+      .catch((e) => {
+        console.error("Error loading season details for playback:", e);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [mediaItem.id, season, isTvOrAnime]);
 
   // Record playback progress in localStorage on mount / episode change
   useEffect(() => {
@@ -165,6 +197,15 @@ export const Watch: React.FC<WatchProps> = ({
     (s) => s.season_number === season,
   );
   const totalEpisodesInSeason = currentSeasonMeta?.episode_count;
+  const currentEpisodeMeta = seasonDetails?.episodes?.find(
+    (ep) => ep.episode_number === episode,
+  );
+  const description =
+    (isTvOrAnime
+      ? currentEpisodeMeta?.overview || seasonDetails?.overview
+      : undefined) ||
+    details?.overview ||
+    mediaItem.overview;
 
   return (
     <div className="min-h-screen pt-20 pb-20 px-4 sm:px-8 max-w-7xl mx-auto w-full flex flex-col gap-6">
@@ -228,9 +269,9 @@ export const Watch: React.FC<WatchProps> = ({
           )}
         </div>
 
-        {(details?.overview || mediaItem.overview) && (
+        {description && (
           <p className="text-sm sm:text-base text-neutral-300 leading-relaxed max-w-5xl">
-            {details?.overview || mediaItem.overview}
+            {description}
           </p>
         )}
 
@@ -286,7 +327,7 @@ export const Watch: React.FC<WatchProps> = ({
               details?.recommendations?.results ||
               details?.similar?.results ||
               []
-            ).slice(0, 12)}
+            ).slice(0, 15)}
             onSelectMedia={onSelectMedia}
           />
         </div>

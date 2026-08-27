@@ -123,8 +123,8 @@ export const Search: React.FC<SearchProps> = ({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by title, anime, movie, or TV show..."
-            className="w-full pl-12 pr-12 py-4 bg-[#0d0d0d] text-white placeholder-neutral-500 text-base sm:text-lg font-medium rounded-2xl border border-white/15 focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/20 shadow-2xl backdrop-blur-md transition-all"
+            placeholder="Search by title, anime, movie, or series..."
+            className="w-full pl-12 pr-12 py-4 bg-[#0d0d0d] text-white placeholder-neutral-500 text-base sm:text-lg font-medium rounded-3xl border border-white/15 focus:outline-none focus:border-red-600 focus:ring-2 focus:ring-red-600/20 shadow-2xl backdrop-blur-md transition-all"
           />
           {query && (
             <button
@@ -141,46 +141,37 @@ export const Search: React.FC<SearchProps> = ({
         <div className="flex items-center justify-center gap-2 flex-wrap">
           <button
             onClick={() => setCategory("all")}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all duration-300 ease-out cursor-pointer transform hover:scale-105 active:scale-95 ${
               category === "all"
-                ? "bg-red-600 text-white font-extrabold shadow-md shadow-red-600/20"
-                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10"
+                ? "bg-red-600 text-white font-bold shadow-md shadow-red-600/20 scale-100"
+                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10 hover:border-red-500"
             }`}
           >
             All Media
           </button>
+
           <button
             onClick={() => setCategory("movie")}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all duration-300 ease-out cursor-pointer transform hover:scale-105 active:scale-95 ${
               category === "movie"
-                ? "bg-red-600 text-white font-extrabold shadow-md shadow-red-600/20"
-                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10"
+                ? "bg-red-600 text-white font-bold shadow-md shadow-red-600/20 scale-100"
+                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10 hover:border-red-500"
             }`}
           >
-            <Film className="w-4 h-4" />
+            <Film className="w-4 h-4 transition-transform duration-300" />
             <span>Movies</span>
           </button>
+
           <button
             onClick={() => setCategory("tv")}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all duration-300 ease-out cursor-pointer transform hover:scale-105 active:scale-95 ${
               category === "tv"
-                ? "bg-red-600 text-white font-extrabold shadow-md shadow-red-600/20"
-                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10"
+                ? "bg-red-600 text-white font-bold shadow-md shadow-red-600/20 scale-100"
+                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10 hover:border-red-500"
             }`}
           >
-            <Tv className="w-4 h-4" />
+            <Tv className="w-4 h-4 transition-transform duration-300" />
             <span>TV Series</span>
-          </button>
-          <button
-            onClick={() => setCategory("anime")}
-            className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-              category === "anime"
-                ? "bg-red-600 text-white font-extrabold shadow-md shadow-red-600/20"
-                : "bg-[#0d0d0d] text-neutral-300 hover:text-white border border-white/10"
-            }`}
-          >
-            <Tv className="w-4 h-4" />
-            <span>Anime</span>
           </button>
         </div>
 

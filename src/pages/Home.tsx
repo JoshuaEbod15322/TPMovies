@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Compass, Tv, Sparkles, Radio, TrendingUp } from "lucide-react";
+import { Compass, Tv, TvMinimal, Radio, TrendingUp } from "lucide-react";
 import type { MediaItem, ContinueWatchingItem } from "../types";
 import { Hero } from "../components/Hero";
 import { MediaRow } from "../components/MediaRow";
@@ -257,6 +257,7 @@ export const Home: React.FC<HomeProps> = ({
       ) : (
         <div className="flex flex-col gap-2 my-6">
           {/* 🧭 Discovery (Random Movies, Series & Anime) */}
+
           <MediaRow
             title="Discovery"
             items={discoveryItems}
@@ -287,7 +288,7 @@ export const Home: React.FC<HomeProps> = ({
           <MediaRow
             title="Popular Anime"
             items={popularAnime}
-            icon={<Sparkles className="w-6 h-6 text-red-500" />}
+            icon={<TvMinimal className="w-6 h-6 text-red-500" />}
             onSelectMedia={onSelectMedia}
             onViewAll={() => onNavigateTab("anime")}
           />

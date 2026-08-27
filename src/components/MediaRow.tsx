@@ -12,6 +12,7 @@ interface MediaRowProps {
   onOpenTop10?: () => void;
   isLoading?: boolean;
   limit?: number;
+  mobileLimit?: number;
 }
 
 export const MediaRow: React.FC<MediaRowProps> = ({
@@ -22,18 +23,19 @@ export const MediaRow: React.FC<MediaRowProps> = ({
   onViewAll,
   isLoading = false,
   limit = 20,
+  mobileLimit = 14,
 }) => {
   if (!isLoading && (!items || items.length === 0)) {
     return null;
   }
 
-  // Enforce 3 rows x 5 columns (15 items) per section
+  // Enforce 3 rows x 5
   const displayItems = items.slice(0, limit);
 
   return (
     <section className="relative px-4 sm:px-8 max-w-7xl mx-auto w-full pl-4 sm:pl-4">
       {/* Section Header */}
-      <div className="flex items-center justify-between mb-4 flex-wrap gap-2">
+      <div className="flex items-center justify-between lg:mt-[-25px] mb-2 mt-4 flex-wrap gap-2">
         <div className="flex items-center gap-2.5">
           {icon && <div className="text-red-600">{icon}</div>}
           <h2 className="text-xl sm:text-2xl font-bold tracking-tight text-white flex items-center gap-2">
@@ -56,13 +58,14 @@ export const MediaRow: React.FC<MediaRowProps> = ({
       </div>
 
       {/* 3 Rows x 5 Columns Grid */}
-      <div className="app-media-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 sm:gap-5 sm:mb-15">
-        {displayItems.map((item) => (
-          <MediaCard
+      <div className="app-media-grid grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-5 sm:mb-15">
+        {displayItems.map((item, idx) => (
+          <div
             key={`${item.media_type || "media"}-${item.id}`}
-            item={item}
-            onSelect={onSelectMedia}
-          />
+            className={idx >= mobileLimit ? "hidden sm:block" : "block"}
+          >
+            <MediaCard item={item} onSelect={onSelectMedia} />
+          </div>
         ))}
       </div>
     </section>

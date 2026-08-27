@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Star, Play, Film, Tv } from "lucide-react";
+import { Star, Play, Film, Tv, TvMinimal } from "lucide-react";
 import type { MediaItem } from "../types";
 import { getImageUrl } from "../services/tmdb";
 import { formatRating, formatYear } from "../utils/helpers";
@@ -83,7 +83,7 @@ export const MediaCard: React.FC<MediaCardProps> = ({
           {/* Media Type Badge */}
           <span className="px-2 py-0.5 text-[10px] font-bold tracking-wider uppercase rounded shadow backdrop-blur-md flex items-center gap-1 bg-black/80 text-neutral-300 border border-white/10">
             {isAnimeMovie || isAnime ? (
-              <Tv className="w-3 h-3 text-purple-400" />
+              <TvMinimal className="w-3 h-3 text-purple-400" />
             ) : item.media_type === "tv" ? (
               <Tv className="w-3 h-3 text-blue-400" />
             ) : (
