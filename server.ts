@@ -18,14 +18,19 @@ function getAi(): GoogleGenAI | null {
     return null;
   }
   if (!aiClient) {
-    aiClient = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          "User-Agent": "aistudio-build",
+    try {
+      aiClient = new GoogleGenAI({
+        apiKey: apiKey.trim(),
+        httpOptions: {
+          headers: {
+            "User-Agent": "aistudio-build",
+          },
         },
-      },
-    });
+      });
+    } catch (error) {
+      console.error("Gemini client initialization failed:", error);
+      return null;
+    }
   }
   return aiClient;
 }
@@ -131,12 +136,8 @@ CRITICAL RULES:
         : ""
     }`;
 
-    // Try models with fallback in case of high-demand spikes
-    const candidateModels = [
-      "gemini-3.8-flash",
-      "gemini-3.1-flash-lite",
-      "gemini-flash-latest",
-    ];
+    // Try stable public models with fallback in case of high-demand spikes.
+    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash"];
 
     for (const model of candidateModels) {
       try {
