@@ -3,7 +3,7 @@ import { Navbar } from "./components/Navbar";
 import type { NavTab } from "./components/Navbar";
 import { Footer } from "./components/Footer";
 import { BackToTop } from "./components/BackToTop";
-import { AiRecommenderButton } from "./components/AiRecommenderButton";
+// import { AiRecommenderButton } from "./components/AiRecommenderButton";
 import { AiMovieRecommenderModal } from "./components/AiMovieRecommenderModal";
 import type { MediaItem } from "./types";
 
@@ -281,10 +281,10 @@ function App() {
       </main>
       <Footer onNavigate={handleNavigate} />
       <BackToTop />
-      <AiRecommenderButton
+      {/* <AiRecommenderButton
         isOpen={isAiRecommenderOpen}
         onClick={() => setIsAiRecommenderOpen((isOpen) => !isOpen)}
-      />
+      /> */}
       <AiMovieRecommenderModal
         isOpen={isAiRecommenderOpen}
         onClose={() => setIsAiRecommenderOpen(false)}
