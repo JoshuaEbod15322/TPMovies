@@ -220,9 +220,14 @@ export const Watch: React.FC<WatchProps> = ({
             <span>Back</span>
           </button>
           <ChevronRight className="w-3.5 h-3.5 text-neutral-600" />
-          <span className="text-neutral-200 font-semibold truncate max-w-[200px] sm:max-w-none">
+          <button
+            type="button"
+            onClick={() => onSelectMedia(details || mediaItem)}
+            className="text-neutral-200 font-semibold truncate max-w-[200px] sm:max-w-none hover:text-red-400 focus:text-red-400 focus:outline-none transition-colors cursor-pointer"
+            title={`View details for ${title}`}
+          >
             {title}
-          </span>
+          </button>
           {isTvOrAnime && (
             <>
               <ChevronRight className="w-3.5 h-3.5 text-neutral-600" />

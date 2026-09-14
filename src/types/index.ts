@@ -40,7 +40,7 @@ export interface MediaItem {
   episodes_count?: number;
   airing_status?: string;
   anime_season?: string;
-  anime_type?: "movie" | "series";
+  anime_type?: "movie" | "tv" | "ova" | "ona" | "special" | "music";
 }
 
 export interface CastMember {
@@ -172,4 +172,33 @@ export interface StreamingProvider {
     season: number,
     episode: number,
   ) => string;
+}
+
+export interface AiMovieRecommendationItem {
+  title: string;
+  year: string;
+  mediaType?: "movie" | "series" | "anime";
+  genre: string;
+  whyRecommended: string;
+  matchVibe: string;
+  tmdbMedia?: MediaItem | null;
+  isLoadingMedia?: boolean;
+}
+
+export interface AiRecommendationResponse {
+  isMovieRelated: boolean;
+  message: string;
+  recommendations: AiMovieRecommendationItem[];
+  suggestedFollowups: string[];
+}
+
+export interface AiChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  genre?: string;
+  recommendations?: AiMovieRecommendationItem[];
+  suggestedFollowups?: string[];
+  isMovieRelated?: boolean;
+  timestamp: number;
 }

@@ -44,6 +44,10 @@ Vite will print the local development URL, usually `http://localhost:5173`.
 
 The app includes a fallback demo key, but using your own key is recommended. Do not commit private keys or secret credentials.
 
+### Gemini AI recommendations
+
+Copy `.env.example` to `.env` and set `GEMINI_API_KEY` to a valid Gemini API key. The server loads this key with `dotenv`; do not use a `VITE_` prefix because that would expose it in the browser bundle.
+
 ## Available Scripts
 
 | Command           | Description                              |
