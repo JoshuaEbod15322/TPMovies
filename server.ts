@@ -39,7 +39,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 // AI Movie Recommendation Route
-app.post("/api/ai/recommend", async (req, res) => {
+app.post(["/api/ai/recommend", "/api/index", "/"], async (req, res) => {
   try {
     const { prompt, conversationHistory } = req.body;
 
@@ -327,4 +327,10 @@ async function start() {
   });
 }
 
-start();
+// Vercel imports the Express app as a serverless function. Local development
+// still starts the HTTP server through the package scripts.
+if (process.env.VERCEL !== "1") {
+  start();
+}
+
+export default app;
