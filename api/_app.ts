@@ -323,7 +323,7 @@ CRITICAL RULES:
      * year: release year as string e.g. "2014"
      * mediaType: exactly one of "movie", "series", or "anime"
      * genre: primary genres e.g. "Sci-Fi / Thriller"
-     * whyRecommended: 1 to 2 engaging, persuasive sentences explaining why this movie fits their prompt.
+    * whyRecommended: one concise, engaging sentence of no more than 120 characters explaining why this title fits their prompt.
      * matchVibe: a catchy 2-4 word mood tag e.g. "Mind-Bending & Cerebral", "Adrenaline-Fueled", "Cozy Nostalgia", "Dark Psychological Dread".
 4. Provide a warm, entertainment-savvy opening message in "message".
 5. Provide 3 short, intriguing suggested follow-up prompts in "suggestedFollowups".`;

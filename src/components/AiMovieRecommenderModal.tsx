@@ -398,7 +398,7 @@ export const AiMovieRecommenderModal: React.FC<
                                       </p>
 
                                       {/* Why recommended */}
-                                      <p className="text-xs text-neutral-300 mt-1.5 line-clamp-3 leading-relaxed">
+                                      <p className="text-[11px] text-neutral-300 mt-1.5  leading-relaxed">
                                         {rec.whyRecommended}
                                       </p>
                                     </div>
