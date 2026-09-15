@@ -61,7 +61,7 @@ const INITIAL_MESSAGE: AiChatMessage = {
   id: "init-1",
   role: "assistant",
   content:
-    "Hello! I am CineAI, your personal entertainment curator. Ask me for movie, TV series, or anime recommendations based on your mood, favorite titles, actors, characters, or eras.",
+    "Hello! I am MovieAI, Ask me for movie, TV series, or anime recommendations based on your mood, favorite titles, actors, characters, or eras.",
   suggestedFollowups: [
     "Recommend movies like Inception",
     "Best dark psychological thrillers",
