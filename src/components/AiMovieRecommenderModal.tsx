@@ -207,11 +207,11 @@ export const AiMovieRecommenderModal: React.FC<
           {/* Header */}
           <div className="relative px-4 sm:px-6 py-3.5 sm:py-4 border-b border-white/10 bg-[#121217]/95 flex items-center justify-between gap-3 shrink-0">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 flex items-center justify-center shadow-lg shadow-red-950/40">
+              {/* <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-red-600 to-amber-500 p-0.5 flex items-center justify-center shadow-lg shadow-red-950/40">
                 <div className="w-full h-full bg-[#0c0c10] rounded-[10px] flex items-center justify-center">
                   <Sparkles className="w-5 h-5 text-red-500" />
                 </div>
-              </div>
+              </div> */}
               <div>
                 <div className="flex items-center gap-2">
                   <h1 className="text-base sm:text-2xl font-bold tracking-tight text-white flex items-center gap-1.5">
@@ -488,15 +488,14 @@ export const AiMovieRecommenderModal: React.FC<
             {/* Loading Indicator */}
             {isLoading && (
               <div className="flex gap-3 items-start">
-                <div className="w-7 h-7 rounded-lg bg-red-600/20 border border-red-500/30 flex items-center justify-center shrink-0 animate-pulse">
+                <div className="w-7 h-7 rounded-lg bg-red-600/20 border border-red-500/30 flex items-center justify-center shrink-0">
                   <Sparkles className="w-3.5 h-3.5 text-red-400" />
                 </div>
                 <div className="rounded-2xl rounded-tl-sm bg-[#15151d] border border-white/5 px-4 py-3 text-sm text-neutral-300 shadow-lg space-y-2">
                   <div className="flex items-center gap-2 text-xs text-red-400 font-medium">
-                    <span className="w-2 h-2 rounded-full bg-red-500 animate-ping" />
+                    <span className="w-2 h-2 rounded-full animate-[blink_1s_ease-in-out_infinite]" />{" "}
                     <span>Analyzing the matching movies...</span>
                   </div>
-                  <div className="w-48 h-2 bg-neutral-800 rounded-full animate-pulse" />
                 </div>
               </div>
             )}

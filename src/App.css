@@ -256,3 +256,14 @@ input {
     margin-top: -220px;
   }
 }
+
+@keyframes blink {
+  0%,
+  100% {
+    background-color: rgb(185 28 28); /* red-500 */
+  }
+
+  50% {
+    background-color: rgb(127 29 29); /* gray-900 */
+  }
+}

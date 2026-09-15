@@ -17,7 +17,6 @@ export const AiRecommenderButton: React.FC<AiRecommenderButtonProps> = ({
         id="ai-recommender-circle-btn"
         aria-label="Ask AI for movie recommendations"
         onClick={onClick}
-        whileHover={{ scale: 1.08, y: -2 }}
         whileTap={{ scale: 0.94 }}
         transition={{ type: "spring", damping: 20, stiffness: 300 }}
         className={`relative p-3.5 sm:p-4 rounded-full bg-[#111115]/95 hover:bg-[#18181f] border text-white shadow-2xl backdrop-blur-md cursor-pointer transition-all duration-200 group flex items-center justify-center ${
@@ -58,7 +57,6 @@ export const AiRecommenderButton: React.FC<AiRecommenderButtonProps> = ({
 
         {/* Tooltip on hover (hidden on small touch screens, visible on md+) */}
         <span className="hidden md:group-hover:flex absolute left-full ml-3 top-1/2 -translate-y-1/2 whitespace-nowrap bg-[#131318]/95 border border-white/10 text-white text-xs font-medium px-2.5 py-1.5 rounded-lg shadow-xl backdrop-blur-md items-center gap-1.5 pointer-events-none transition-all duration-150">
-          <Sparkles className="w-3.5 h-3.5 text-red-500" />
           <span>Ask AI Movies</span>
         </span>
       </motion.button>
