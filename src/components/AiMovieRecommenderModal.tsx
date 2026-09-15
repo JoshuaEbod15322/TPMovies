@@ -309,10 +309,10 @@ export const AiMovieRecommenderModal: React.FC<
                     {/* Movie Recommendations Grid */}
                     {msg.recommendations && msg.recommendations.length > 0 && (
                       <div className="pl-9 sm:pl-10 space-y-2.5">
-                        <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
-                          <Film className="w-3.5 h-3.5 text-red-500" /> Curated
-                          Picks ({msg.recommendations.length})
-                        </div>
+                        {/* <div className="text-xs font-bold text-neutral-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <Film className="w-3.5 h-3.5 text-red-500" />{" "}
+                          Recommended Picks ({msg.recommendations.length})
+                        </div> */}
 
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                           {msg.recommendations.map((rec, rIdx) => {
@@ -365,7 +365,9 @@ export const AiMovieRecommenderModal: React.FC<
                                         {media ? (
                                           <button
                                             type="button"
-                                            onClick={() => handleOpenDetails(media)}
+                                            onClick={() =>
+                                              handleOpenDetails(media)
+                                            }
                                             className="text-left text-sm font-bold text-white hover:text-red-400 focus:text-red-400 transition-colors line-clamp-1 cursor-pointer"
                                             title={`View details for ${rec.title}`}
                                           >
@@ -384,11 +386,11 @@ export const AiMovieRecommenderModal: React.FC<
                                       </div>
 
                                       {/* Match Vibe Badge */}
-                                      {rec.matchVibe && (
+                                      {/* {rec.matchVibe && (
                                         <span className="inline-block px-1.5 py-0.5 mt-1 bg-red-950/50 border border-red-500/30 text-red-300 text-[10px] font-medium rounded">
                                           {rec.matchVibe}
                                         </span>
-                                      )}
+                                      )} */}
 
                                       {/* Genre */}
                                       <p className="text-[11px] text-neutral-400 mt-1 line-clamp-1">

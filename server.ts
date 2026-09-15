@@ -14,25 +14,281 @@ app.use(express.json());
 let aiClient: GoogleGenAI | null = null;
 function getAi(): GoogleGenAI | null {
   const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey || apiKey === "MY_GEMINI_API_KEY" || apiKey.trim() === "") {
+  if (!apiKey || apiKey === "GEMINI_API_KEY" || apiKey.trim() === "") {
     return null;
   }
   if (!aiClient) {
-    try {
-      aiClient = new GoogleGenAI({
-        apiKey: apiKey.trim(),
-        httpOptions: {
-          headers: {
-            "User-Agent": "aistudio-build",
-          },
+    aiClient = new GoogleGenAI({
+      apiKey,
+      httpOptions: {
+        headers: {
+          "User-Agent": "aistudio-build",
         },
-      });
-    } catch (error) {
-      console.error("Gemini client initialization failed:", error);
-      return null;
-    }
+      },
+    });
   }
   return aiClient;
+}
+
+function getPromptAwareFallbackRecommendations(prompt: string) {
+  const query = prompt.toLowerCase();
+
+  const vibeGroups = [
+    {
+      name: "mind-bending sci-fi",
+      keywords: [
+        "mind-bending",
+        "sci-fi",
+        "science fiction",
+        "space",
+        "time",
+        "brain",
+        "psychological",
+        "existential",
+        "dream",
+        "intricate",
+      ],
+      recommendations: [
+        {
+          title: "Inception",
+          year: "2010",
+          mediaType: "movie",
+          genre: "Sci-Fi / Action / Thriller",
+          whyRecommended:
+            "A layered, high-concept mind-bender that plays with perception, memory, and impossible architecture.",
+          matchVibe: "Mind-Bending & Cerebral",
+        },
+        {
+          title: "Arrival",
+          year: "2016",
+          mediaType: "movie",
+          genre: "Sci-Fi / Drama / Mystery",
+          whyRecommended:
+            "Beautifully cerebral and intimate, with a careful focus on language, time, and emotional impact.",
+          matchVibe: "Thoughtful & Atmospheric",
+        },
+        {
+          title: "Interstellar",
+          year: "2014",
+          mediaType: "movie",
+          genre: "Sci-Fi / Adventure / Drama",
+          whyRecommended:
+            "A sweeping cosmic journey that mixes scientific wonder, heart, and existential stakes.",
+          matchVibe: "Epic & Emotional",
+        },
+      ],
+    },
+    {
+      name: "dark thriller",
+      keywords: [
+        "thriller",
+        "dark",
+        "twist",
+        "mystery",
+        "crime",
+        "suspense",
+        "plot twist",
+        "psychological",
+      ],
+      recommendations: [
+        {
+          title: "Shutter Island",
+          year: "2010",
+          mediaType: "movie",
+          genre: "Mystery / Thriller",
+          whyRecommended:
+            "A tense, layered psychological puzzle that keeps slipping deeper into paranoia and doubt.",
+          matchVibe: "Dark Psychological Dread",
+        },
+        {
+          title: "Se7en",
+          year: "1995",
+          mediaType: "movie",
+          genre: "Crime / Thriller / Mystery",
+          whyRecommended:
+            "Brutal, stylish, and relentlessly suspenseful, with an unforgettable sense of dread.",
+          matchVibe: "Bleak & Relentless",
+        },
+        {
+          title: "Gone Girl",
+          year: "2014",
+          mediaType: "movie",
+          genre: "Thriller / Mystery / Crime",
+          whyRecommended:
+            "Sharp, clever, and twisty, it turns every assumption into a trap.",
+          matchVibe: "Devious & Clever",
+        },
+      ],
+    },
+    {
+      name: "feel-good action",
+      keywords: [
+        "action comedy",
+        "fun",
+        "feel-good",
+        "action",
+        "comedy",
+        "banter",
+        "funny",
+        "90s",
+        "2000s",
+      ],
+      recommendations: [
+        {
+          title: "Hot Fuzz",
+          year: "2007",
+          mediaType: "movie",
+          genre: "Action / Comedy / Crime",
+          whyRecommended:
+            "An energetic, hilarious action spoof with clever writing and a perfect comedy rhythm.",
+          matchVibe: "Sharp & Energetic",
+        },
+        {
+          title: "The Nice Guys",
+          year: "2016",
+          mediaType: "movie",
+          genre: "Action / Comedy / Crime",
+          whyRecommended:
+            "A witty, chaotic buddy comedy with excellent chemistry and a strong sense of momentum.",
+          matchVibe: "Funny & Fast",
+        },
+        {
+          title: "Scott Pilgrim vs. The World",
+          year: "2010",
+          mediaType: "movie",
+          genre: "Action / Comedy / Fantasy",
+          whyRecommended:
+            "Visually wild and insanely fun, with punchy style and great comedic energy.",
+          matchVibe: "Chaotic & Stylish",
+        },
+      ],
+    },
+    {
+      name: "anime",
+      keywords: [
+        "anime",
+        "japanese animation",
+        "cartoon",
+        "anime series",
+        "animation",
+      ],
+      recommendations: [
+        {
+          title: "Spirited Away",
+          year: "2001",
+          mediaType: "anime",
+          genre: "Animation / Fantasy / Adventure",
+          whyRecommended:
+            "A visually stunning and emotionally resonant fantasy that balances wonder, fear, and discovery.",
+          matchVibe: "Dreamlike & Magical",
+        },
+        {
+          title: "Attack on Titan",
+          year: "2013",
+          mediaType: "anime",
+          genre: "Action / Drama / Fantasy",
+          whyRecommended:
+            "Intense, high-stakes, and emotionally devastating, with enormous world-building and tension.",
+          matchVibe: "Epic & Brutal",
+        },
+        {
+          title: "Fullmetal Alchemist: Brotherhood",
+          year: "2009",
+          mediaType: "anime",
+          genre: "Action / Adventure / Fantasy",
+          whyRecommended:
+            "A smart, heartfelt anime packed with big ideas, strong character arcs, and exceptional pacing.",
+          matchVibe: "Epic & Rewarding",
+        },
+      ],
+    },
+    {
+      name: "horror",
+      keywords: [
+        "horror",
+        "scary",
+        "haunting",
+        "supernatural",
+        "tense",
+        "creepy",
+      ],
+      recommendations: [
+        {
+          title: "The Conjuring",
+          year: "2013",
+          mediaType: "movie",
+          genre: "Horror / Mystery / Thriller",
+          whyRecommended:
+            "A classic modern haunted-house horror film with genuine tension and relentless atmosphere.",
+          matchVibe: "Creepy & Relentless",
+        },
+        {
+          title: "Get Out",
+          year: "2017",
+          mediaType: "movie",
+          genre: "Horror / Thriller / Mystery",
+          whyRecommended:
+            "Smart, disturbing, and socially sharp, it blends dread with a devastating sense of unease.",
+          matchVibe: "Tense & Unsettling",
+        },
+        {
+          title: "Hereditary",
+          year: "2018",
+          mediaType: "movie",
+          genre: "Horror / Drama / Mystery",
+          whyRecommended:
+            "A deeply unsettling psychological horror that lingers long after the credits end.",
+          matchVibe: "Unnerving & Disturbing",
+        },
+      ],
+    },
+  ];
+
+  const matchedGroup = vibeGroups.find((group) =>
+    group.keywords.some((keyword) => query.includes(keyword)),
+  );
+
+  const baseRecommendations = matchedGroup?.recommendations ?? [
+    {
+      title: "Inception",
+      year: "2010",
+      mediaType: "movie",
+      genre: "Sci-Fi / Action / Thriller",
+      whyRecommended:
+        "A classic choice for high-concept, visually ambitious cinema with layered storytelling.",
+      matchVibe: "Mind-Bending & High Stakes",
+    },
+    {
+      title: "The Dark Knight",
+      year: "2008",
+      mediaType: "movie",
+      genre: "Action / Crime / Drama",
+      whyRecommended:
+        "A dark, intense, and character-driven blockbuster that balances spectacle with moral complexity.",
+      matchVibe: "Dark & Relentless",
+    },
+    {
+      title: "Spirited Away",
+      year: "2001",
+      mediaType: "anime",
+      genre: "Animation / Fantasy / Adventure",
+      whyRecommended:
+        "A magical, imaginative journey full of wonder, heart, and unforgettable visual detail.",
+      matchVibe: "Dreamlike & Enchanting",
+    },
+  ];
+
+  return {
+    isMovieRelated: true,
+    message:
+      "Here are recommendations tuned to your prompt. Add your Gemini API key for even more tailored AI suggestions.",
+    recommendations: baseRecommendations,
+    suggestedFollowups: [
+      "Recommend more intense thrillers",
+      "Best sci-fi movies with mind-bending twists",
+      "Great anime with strong emotional payoff",
+    ],
+  };
 }
 
 // Health check endpoint
@@ -55,54 +311,7 @@ app.post(["/api/ai/recommend", "/api/index", "/"], async (req, res) => {
     const ai = getAi();
 
     if (!ai) {
-      return res.json({
-        isMovieRelated: true,
-        message:
-          "Here are top-tier cinema recommendations based on your request. (Add your Gemini API Key in Settings > Secrets for customized conversational AI analysis!)",
-        recommendations: [
-          {
-            title: "Inception",
-            year: "2010",
-            mediaType: "movie",
-            genre: "Sci-Fi / Action / Thriller",
-            whyRecommended:
-              "A legendary heist thriller diving deep into subconscious dreams with jaw-dropping practical visuals and layered storytelling.",
-            matchVibe: "Mind-Bending & High Stakes",
-          },
-          {
-            title: "Interstellar",
-            year: "2014",
-            mediaType: "movie",
-            genre: "Sci-Fi / Adventure / Drama",
-            whyRecommended:
-              "An emotional and scientifically grounded journey through wormholes across space and time to save humanity.",
-            matchVibe: "Epic & Existential",
-          },
-          {
-            title: "Blade Runner 2049",
-            year: "2017",
-            mediaType: "movie",
-            genre: "Sci-Fi / Neo-Noir / Mystery",
-            whyRecommended:
-              "A visual masterpiece exploring identity, humanity, and soul in a breathtaking cyberpunk dystopia.",
-            matchVibe: "Atmospheric & Thought-Provoking",
-          },
-          {
-            title: "The Dark Knight",
-            year: "2008",
-            mediaType: "movie",
-            genre: "Action / Crime / Drama",
-            whyRecommended:
-              "The pinnacle of cinematic comic adaptation, driven by Heath Ledger's iconic Joker and intense moral dilemmas.",
-            matchVibe: "Dark & Relentless",
-          },
-        ],
-        suggestedFollowups: [
-          "Recommend movies with huge plot twists",
-          "Best psychological thrillers of the 2010s",
-          "Feel-good 90s adventure movies",
-        ],
-      });
+      return res.json(getPromptAwareFallbackRecommendations(prompt));
     }
 
     const systemInstruction = `You are MovieAI, an expert entertainment curator and recommendation concierge for TPMovies.
@@ -136,8 +345,15 @@ CRITICAL RULES:
         : ""
     }`;
 
-    // Try stable public models with fallback in case of high-demand spikes.
-    const candidateModels = ["gemini-2.5-flash", "gemini-2.0-flash"];
+    // Use Gemini model IDs that are currently available in the API.
+    // Older 2.x IDs return 404s and force the fallback recommendations.
+    const candidateModels = [
+      "gemini-3.7-flash",
+      "gemini-3.6-flash",
+      "gemini-3.5-flash",
+      "gemini-3.5-flash-lite",
+      "gemini-flash-latest",
+    ];
 
     for (const model of candidateModels) {
       try {
@@ -251,53 +467,7 @@ CRITICAL RULES:
       });
     }
 
-    return res.json({
-      isMovieRelated: true,
-      message: `Here are handpicked cinema recommendations for "${prompt.trim()}":`,
-      recommendations: [
-        {
-          title: "Inception",
-          year: "2010",
-          mediaType: "movie",
-          genre: "Sci-Fi / Thriller",
-          whyRecommended:
-            "A masterwork of intricate dream architecture, stunning visual effects, and relentless tension.",
-          matchVibe: "Mind-Bending & Cerebral",
-        },
-        {
-          title: "Interstellar",
-          year: "2014",
-          mediaType: "movie",
-          genre: "Sci-Fi / Adventure",
-          whyRecommended:
-            "An awe-inspiring odyssey exploring the depths of space, black holes, and the endurance of love.",
-          matchVibe: "Epic & Emotional",
-        },
-        {
-          title: "Arrival",
-          year: "2016",
-          mediaType: "movie",
-          genre: "Sci-Fi / Mystery",
-          whyRecommended:
-            "A profound linguistic first-contact story that reshapes how you perceive time and memory.",
-          matchVibe: "Atmospheric & Poignant",
-        },
-        {
-          title: "Shutter Island",
-          year: "2010",
-          mediaType: "movie",
-          genre: "Mystery / Thriller",
-          whyRecommended:
-            "Scorsese's atmospheric gothic puzzle full of paranoia, dread, and a legendary final twist.",
-          matchVibe: "Dark Psychological Dread",
-        },
-      ],
-      suggestedFollowups: [
-        "More movies with mind-bending endings",
-        "Best sci-fi movies of the 2010s",
-        "Movies with mysterious isolated settings",
-      ],
-    });
+    return res.json(getPromptAwareFallbackRecommendations(prompt));
   } catch (error: any) {
     console.error("AI Recommendation Error:", error);
     return res.status(500).json({
