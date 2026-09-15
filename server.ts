@@ -441,8 +441,12 @@ CRITICAL RULES:
           const parsed = JSON.parse(text);
           return res.json(parsed);
         }
-      } catch (err: any) {
-        console.warn(`Model ${model} failed, trying fallback...`, err?.message);
+      } catch (error: any) {
+        console.error("AI Recommendation Error:", error);
+        return res.status(500).json({
+          error: "Failed to generate movie recommendations.",
+          details: error?.message || "Unknown error",
+        });
       }
     }
 
