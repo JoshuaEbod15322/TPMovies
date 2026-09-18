@@ -86,8 +86,8 @@ export const Footer: React.FC<FooterProps> = ({ onNavigate }) => {
             </span>
           </div>
 
-          <div className="flex items-center gap-2 flex-shrink-0 text-[12px]">
-            <span>joshuaebod.202300287@gmail.com</span>
+          <div className="flex items-center gap-2 flex-shrink-0 text-[12px] font-bold cursor-pointer hover:text-red-500 transition-colors duration-200">
+            <a href="https://joshuaebodportfolio.vercel.app/">Portfolio</a>
           </div>
         </div>
 
